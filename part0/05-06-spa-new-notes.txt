@@ -1,0 +1,22 @@
+sequenceDiagram
+
+Note left of browser : Loads Single Page App
+
+browser ->> server: HTTPS GET https://.../exampleapp/spa
+
+activate server
+server -->> browser : HTML file ../exampleapp/spa Code 200
+server -->> browser: CSS file main.css
+server -->> browser: JavaScript file spa.js
+server -->> browser: JSON file data.json
+deactivate server
+
+browser ->> server: HTTPS POST new_note '{content}'
+
+activate server
+Note right of server: server doesnt redirect, just sends new_note as JSON
+server -->> browser: Code 201 Created application/json
+
+deactivate server
+
+

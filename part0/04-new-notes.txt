@@ -1,0 +1,16 @@
+sequenceDiagram
+
+Note left of Browser : User adds a new note and Submits
+Browser ->> Server : POST .../new_note
+
+activate Server
+Server -->> Browser: new_note HTML file 302 Found
+
+Note right of Server: Server makes a URL redirect
+
+Server -->> Browser: reload notes HTML file
+Server -->> Browser: reload main.css CSS file
+Server -->> Browser: reload main.js JavaScript file
+Server -->> Browser: reload data.json JSON file
+
+deactivate Server
