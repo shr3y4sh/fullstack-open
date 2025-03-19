@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+
+import service from './services/phone-records';
 
 import Filter from './components/Filter';
 import PhoneForm from './components/PhoneBookForm';
@@ -9,10 +10,10 @@ function App() {
 	const [persons, setPersons] = useState([]);
 
 	useEffect(() => {
-		axios
-			.get('http://localhost:3001/persons')
-			.then((response) => {
-				setPersons(response.data);
+		service
+			.getAllListings()
+			.then((persons) => {
+				setPersons(persons);
 			})
 			.catch((err) => console.log(err));
 	}, []);
@@ -23,16 +24,63 @@ function App() {
 		const givenName = formData.get('name').trim();
 		const givenNumber = formData.get('number');
 
-		if (persons.find((person) => person.name === givenName)) {
-			return alert(`${givenName} is already added to the phonebook`);
+		if (
+			persons.find(
+				(person) =>
+					person.name === givenName && person.number === givenNumber
+			)
+		) {
+			return alert(
+				`${givenName} with ${givenNumber} is already added to the phonebook`
+			);
 		}
-		setPersons([...persons, { name: givenName, number: givenNumber }]);
+
+		const person = persons.find((person) => person.name === givenName);
+
+		if (person) {
+			const reply = confirm(
+				`${person.name} is already in the phonebook. Do you want to replace old number with the new one.`
+			);
+			//
+
+			if (!reply) {
+				return;
+			}
+
+			return service
+				.updateListing({ ...person, number: givenNumber })
+				.then((updated) => {
+					setPersons(
+						persons.map((p) => (p.id === person.id ? updated : p))
+					);
+				})
+				.catch((err) => console.log(err));
+		}
+
+		service
+			.postListing({ name: givenName, number: givenNumber })
+			.then((person) => {
+				setPersons(persons.concat(person));
+			})
+			.catch((err) => console.log(err));
 	}
 
 	function handleFilterChange(e) {
 		e.preventDefault();
 		console.log(e.target.value);
 		setfilter(e.target.value);
+	}
+
+	function handleDelete(id) {
+		service
+			.deleteListing(id)
+			.then((person) => {
+				setPersons(persons.filter((p) => p.id !== person.id));
+			})
+			.catch((err) => {
+				console.log(err);
+				setPersons(persons.filter((p) => p.id !== id));
+			});
 	}
 
 	return (
@@ -43,7 +91,19 @@ function App() {
 
 			<h2>Numbers</h2>
 
-			<People filter={filter} persons={persons} />
+			{persons.map((person) => {
+				return (
+					person.name
+						.toLowerCase()
+						.includes(filter.toLowerCase()) && (
+						<People
+							person={person}
+							key={person.id}
+							onDelete={() => handleDelete(person.id)}
+						/>
+					)
+				);
+			})}
 		</>
 	);
 }
