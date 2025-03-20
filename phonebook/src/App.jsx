@@ -5,9 +5,14 @@ import service from './services/phone-records';
 import Filter from './components/Filter';
 import PhoneForm from './components/PhoneBookForm';
 import People from './components/People';
+import Notification from './components/Notification';
 
-function App() {
+export default function App() {
 	const [persons, setPersons] = useState([]);
+	const [notifMessage, setNotifMessage] = useState({
+		message: null,
+		className: 'success'
+	});
 
 	useEffect(() => {
 		service
@@ -54,8 +59,36 @@ function App() {
 						persons.map((p) => (p.id === person.id ? updated : p))
 					);
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					setNotifMessage({
+						message: `${
+							persons.find((p) => p.id === person.id).name
+						} is already deleted`,
+						className: 'error'
+					});
+
+					setTimeout(() => {
+						setPersons(persons.filter((p) => p.id !== person.id));
+						setNotifMessage({
+							...notifMessage,
+							message: null
+						});
+					}, 5000);
+					console.log(err);
+				});
 		}
+
+		setNotifMessage({
+			message: `${givenName} added to the phonebook`,
+			className: 'success'
+		});
+
+		setTimeout(() => {
+			setNotifMessage({
+				...notifMessage,
+				message: null
+			});
+		}, 5000);
 
 		service
 			.postListing({ name: givenName, number: givenNumber })
@@ -79,13 +112,13 @@ function App() {
 			})
 			.catch((err) => {
 				console.log(err);
-				setPersons(persons.filter((p) => p.id !== id));
 			});
 	}
 
 	return (
 		<>
 			<h1>PhoneBook</h1>
+			<Notification notification={notifMessage} />
 			<Filter filter={filter} changeFilter={handleFilterChange} />
 			<PhoneForm handleFormSubmit={handleFormSubmit} />
 
@@ -107,5 +140,3 @@ function App() {
 		</>
 	);
 }
-
-export default App;

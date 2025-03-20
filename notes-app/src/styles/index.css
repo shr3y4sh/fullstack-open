@@ -1,0 +1,28 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #212121;
+}
+
+h1 {
+	color: #20d020;
+	font-style: italic;
+}
+
+li.note {
+	color: #cac6c6;
+	padding-top: 5px;
+	font-size: 15px;
+}
+
+.error {
+	color: #ee7979;
+	background: 212121;
+	font-size: 20px;
+	border-style: solid;
+	border-radius: 5px;
+	padding: 10px;
+	margin-bottom: 10px;
+}

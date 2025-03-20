@@ -1,0 +1,28 @@
+* {
+	box-sizing: border-box;
+}
+
+.error,
+.success {
+	margin: 0;
+	padding: 0;
+	height: 5rem;
+	font-size: 1.5rem;
+
+	width: 100%;
+	margin: 1rem 0;
+	font-weight: 700;
+	padding-left: 2.25rem;
+	background-color: #a09b9b;
+	padding-top: 1.25rem;
+	border: 2px solid;
+	border-radius: 1rem;
+}
+
+.error {
+	color: rgb(155, 35, 17);
+}
+
+.success {
+	color: rgb(32, 116, 2);
+}
