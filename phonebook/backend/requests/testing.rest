@@ -1,0 +1,16 @@
+GET http://localhost:3001/info
+
+###
+DELETE http:localhost:3001/api/persons/3
+
+###
+GET http://localhost:3001/api/persons
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "mogambo johnny",
+    "number": "098-29881739"
+}
