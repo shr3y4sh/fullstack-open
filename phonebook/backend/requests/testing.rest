@@ -14,3 +14,12 @@ Content-Type: application/json
     "name": "mogambo johnny",
     "number": "098-29881739"
 }
+
+###
+PUT http://localhost:3001/api/persons/67e0552e796d09b34ecb4657
+Content-Type: application/json
+
+{
+    "name": "Alia Bhatt",
+    "number": "08-12-357819"
+}
