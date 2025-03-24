@@ -3,8 +3,20 @@ const mongoose = require('mongoose');
 const DB_URL = process.env.DB_URI;
 
 const personSchema = new mongoose.Schema({
-	name: String,
-	number: String
+	name: {
+		type: String,
+		minLength: 3,
+		required: true
+	},
+	number: {
+		type: String,
+		required: true,
+		minLength: 8,
+		validate: {
+			validator: (value) =>
+				Promise.resolve(/\d{2,3}-\d{2,3}-\d{2,}/.test(value))
+		}
+	}
 });
 
 personSchema.set('toJSON', {

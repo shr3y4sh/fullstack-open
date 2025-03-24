@@ -95,6 +95,7 @@ app.put('/api/notes/:id', async (req, res, next) => {
 		note.important = important;
 
 		note = await note.save();
+		console.log(req.params.id);
 
 		res.status(201).json(note);
 	} catch (err) {
@@ -126,6 +127,10 @@ app.use((error, req, res, next) => {
 
 	if (error.name === 'CastError') {
 		return res.status(400).send({ error: 'malformed id' });
+	}
+
+	if (error.name === 'ValidationError') {
+		return res.status(400).json({ error: error.message });
 	}
 
 	next(error);

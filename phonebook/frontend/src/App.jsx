@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 
 import { getAll, deleteEntry, formSubmission } from './services/operations.js';
+import personReducer from './services/personReducer.js';
 
 import Filter from './components/Filter';
 import PhoneForm from './components/PhoneBookForm';
@@ -8,7 +9,7 @@ import People from './components/People';
 import Notification from './components/Notification';
 
 export default function App() {
-	const [persons, setPersons] = useState([]);
+	const [persons, dispatch] = useReducer(personReducer, []);
 	const [notifMessage, setNotifMessage] = useState({
 		message: null,
 		className: 'success'
@@ -16,11 +17,11 @@ export default function App() {
 	const [filter, setfilter] = useState('');
 
 	useEffect(() => {
-		getAll(setPersons);
+		getAll(dispatch);
 	}, []);
 
 	function handleFormSubmit(formData) {
-		formSubmission(formData, persons, setPersons, setNotifMessage);
+		formSubmission(formData, persons, dispatch, setNotifMessage);
 	}
 
 	function handleFilterChange(e) {
@@ -30,7 +31,7 @@ export default function App() {
 	}
 
 	function handleDelete(id) {
-		deleteEntry(id, persons, setPersons, setNotifMessage);
+		deleteEntry(id, dispatch, setNotifMessage);
 	}
 
 	return (

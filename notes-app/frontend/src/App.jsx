@@ -23,7 +23,6 @@ function App() {
 
 	function handleFormSubmit(formData) {
 		const nextNote = {
-			id: notes.at(-1).id + 1,
 			content: formData.get('notes'),
 			importance: Math.random() > 0.5
 		};

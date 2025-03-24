@@ -1,34 +1,34 @@
 import service from './phone-records.js';
 
-function notificationDisplay(notification, setter) {
-	setter(notification);
+function notificationDisplay(notification, notifier) {
+	notifier(notification);
 
 	return setTimeout(() => {
-		setter({ ...notification, message: null });
+		notifier({ ...notification, message: null });
 	}, 2000);
 }
 
-export async function getAll(setter) {
+export async function getAll(dispatch) {
 	try {
 		const persons = await service.getAllListings();
-		return setter(persons);
+		return dispatch({ type: 'get_all', persons: persons });
 	} catch (err) {
 		console.log(err);
 	}
 }
 
-async function putUpdate(person, setter, number, persons, notifier) {
+async function putUpdate(person, dispatch, number, notifier) {
 	try {
 		const newPerson = await service.updateListing({
 			...person,
 			number: number
 		});
 
-		newPerson.number = number;
-		const newList = persons.map((p) =>
-			p.id === person.id ? newPerson : p
-		);
-		setter(newList);
+		dispatch({
+			type: 'update_person',
+			person: newPerson,
+			number: number
+		});
 		return notificationDisplay(
 			{
 				message: `Record of ${newPerson.name} updated`,
@@ -45,20 +45,23 @@ async function putUpdate(person, setter, number, persons, notifier) {
 			notifier
 		);
 
-		setter(persons.filter((p) => p.id !== person.id));
+		dispatch({
+			type: 'delete_person',
+			id: person.id
+		});
 
 		console.log(err);
 	}
 }
 
-async function postAdd(name, number, setter, persons, notifier) {
+async function postAdd(name, number, dispatch, notifier) {
 	try {
 		const person = await service.postListing({
 			name: name,
 			number: number
 		});
 
-		setter(persons.concat(person));
+		dispatch({ type: 'add_person', postPerson: person });
 
 		return notificationDisplay(
 			{
@@ -68,15 +71,20 @@ async function postAdd(name, number, setter, persons, notifier) {
 			notifier
 		);
 	} catch (err) {
-		console.log(err);
+		notificationDisplay(
+			{
+				message: err.message,
+				className: 'error'
+			},
+			notifier
+		);
 	}
 }
 
-export async function deleteEntry(id, persons, setter, notifier) {
+export async function deleteEntry(id, dispatch, notifier) {
 	try {
 		const person = await service.deleteListing(id);
-		const newList = persons.filter((p) => p.id !== person.id);
-		setter(newList);
+		dispatch({ type: 'delete_person', id: person.id });
 
 		return notificationDisplay(
 			{
@@ -90,7 +98,7 @@ export async function deleteEntry(id, persons, setter, notifier) {
 	}
 }
 
-export function formSubmission(formData, persons, setPersons, setNotifMessage) {
+export function formSubmission(formData, persons, dispatch, setNotifMessage) {
 	const givenName = formData.get('name').trim();
 	const givenNumber = formData.get('number');
 
@@ -112,20 +120,8 @@ export function formSubmission(formData, persons, setPersons, setNotifMessage) {
 	const person = persons.find((person) => person.name === givenName);
 
 	if (person) {
-		return putUpdate(
-			person,
-			setPersons,
-			givenNumber,
-			persons,
-			setNotifMessage
-		);
+		return putUpdate(person, dispatch, givenNumber, setNotifMessage);
 	}
 
-	return postAdd(
-		givenName,
-		givenNumber,
-		setPersons,
-		persons,
-		setNotifMessage
-	);
+	return postAdd(givenName, givenNumber, dispatch, setNotifMessage);
 }

@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const DB_URL = process.env.MONGODB_URI;
 
 const noteSchema = new mongoose.Schema({
-	content: String,
+	content: {
+		type: String,
+		required: true,
+		minLength: 5
+	},
 	important: Boolean
 });
 

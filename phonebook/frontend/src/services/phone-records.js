@@ -3,25 +3,40 @@ import axios from 'axios';
 const BASE_URL = '/api/persons';
 
 const getAllListings = async () => {
-	const response = await axios.get(BASE_URL);
-	return await response.data;
+	try {
+		const response = await axios.get(BASE_URL);
+		return await response.data;
+	} catch (err) {
+		throw err;
+	}
 };
 
 const postListing = async (person) => {
+	// try {
 	const response = await axios.post(BASE_URL, person);
 	return await response.data;
+	// } catch (err) {
+	// 	throw err;
+	// }
 };
 
 const deleteListing = async (id) => {
-	const response = await axios.delete(`${BASE_URL}/${id}`);
-	return await response.data;
+	try {
+		const response = await axios.delete(`${BASE_URL}/${id}`);
+		return await response.data;
+	} catch (err) {
+		throw err;
+	}
 };
 
 const updateListing = async (person) => {
-	const response = await axios.put(`${BASE_URL}/${person.id}`, person);
-	console.log(response.data.number);
+	try {
+		const response = await axios.put(`${BASE_URL}/${person.id}`, person);
 
-	return await response.data;
+		return await response.data;
+	} catch (err) {
+		throw err;
+	}
 };
 
 export default {
