@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const DB_URL = process.env.MONGODB_URI;
-
 const noteSchema = new mongoose.Schema({
 	content: {
 		type: String,
@@ -19,17 +17,4 @@ noteSchema.set('toJSON', {
 	}
 });
 
-const Note = mongoose.model('note', noteSchema);
-
-mongoose.set('strictQuery', false);
-
-mongoose
-	.connect(DB_URL)
-	.then(() => {
-		console.log('Connected to mongodb');
-	})
-	.catch((err) => {
-		console.log(err.message);
-	});
-
-module.exports = Note;
+module.exports = mongoose.model('note', noteSchema);

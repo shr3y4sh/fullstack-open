@@ -14,7 +14,7 @@ const getAllListings = async () => {
 const postListing = async (person) => {
 	// try {
 	const response = await axios.post(BASE_URL, person);
-	return await response.data;
+	return response.data;
 	// } catch (err) {
 	// 	throw err;
 	// }

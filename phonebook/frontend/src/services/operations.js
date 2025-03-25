@@ -5,7 +5,7 @@ function notificationDisplay(notification, notifier) {
 
 	return setTimeout(() => {
 		notifier({ ...notification, message: null });
-	}, 2000);
+	}, 2500);
 }
 
 export async function getAll(dispatch) {
@@ -65,7 +65,7 @@ async function postAdd(name, number, dispatch, notifier) {
 
 		return notificationDisplay(
 			{
-				message: `${name} added to the phonebook`,
+				message: `${person.name} added to the phonebook`,
 				className: 'success'
 			},
 			notifier
@@ -73,7 +73,7 @@ async function postAdd(name, number, dispatch, notifier) {
 	} catch (err) {
 		notificationDisplay(
 			{
-				message: err.message,
+				message: err.response.data.error,
 				className: 'error'
 			},
 			notifier
