@@ -9,7 +9,18 @@ blogRouter.get('/', async (req, res) => {
 });
 
 blogRouter.post('/', async (req, res) => {
-	let blog = new Blog(req.body);
+	const body = req.body;
+	if (!body.title || !body.url) {
+		return res
+			.status(400)
+			.send({ error: 'title or url fields cannot be empty' });
+	}
+
+	if (!body.likes) {
+		body.likes = 0;
+	}
+
+	let blog = new Blog(body);
 
 	blog = await blog.save();
 

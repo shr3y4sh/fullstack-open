@@ -30,8 +30,6 @@ beforeEach(async () => {
 		blog = new Blog(blog);
 		await blog.save();
 	}
-	const blogsObject = await Blog.find();
-	console.log(blogsObject);
 });
 
 describe('for blog posts', () => {
@@ -48,13 +46,45 @@ describe('for blog posts', () => {
 	});
 
 	test('add one blog to the database', async () => {
-		const newBlog = new Blog(testBlog[0]);
+		const newBlog = testBlog[0];
 
 		await api
 			.post('/api/blogs')
 			.send(newBlog)
 			.expect(201)
 			.expect('Content-Type', /application\/json/);
+
+		const res = await api.get('/api/blogs');
+		const blogList = res.body;
+		assert.strictEqual(blogList.length, blogs.length + 1);
+	});
+
+	test('empty likes default to zero', async () => {
+		const newBlog = {
+			author: 'Martin',
+			title: 'This is some weird post',
+			url: 'www.alpha.com'
+		};
+
+		const res = await api.post('/api/blogs').send(newBlog).expect(201);
+
+		assert.strictEqual(res.body.likes, 0);
+	});
+
+	test('empty title or url values', async () => {
+		const newBlog = {
+			author: 'Testing',
+			likes: 2
+		};
+		await api.post('/api/blogs').send(newBlog).expect(400);
+	});
+
+	test('unique identifier is named "id"', async () => {
+		const res = await api.get('/api/blogs').expect(200);
+		const singleBlog = res.body[0];
+		const keysArray = Object.keys(singleBlog);
+
+		assert(keysArray.includes('id'));
 	});
 });
 
