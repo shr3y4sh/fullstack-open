@@ -27,4 +27,37 @@ blogRouter.post('/', async (req, res) => {
 	res.status(201).json(blog);
 });
 
+blogRouter.delete('/:id', async (req, res) => {
+	const id = req.params.id;
+
+	const blog = await Blog.findById(id);
+
+	if (!blog) {
+		return res
+			.status(404)
+			.json({ error: `blog with id: ${id} doesn't exist` });
+	}
+
+	await Blog.findByIdAndDelete(id);
+
+	res.status(204).json(blog);
+});
+
+blogRouter.put('/:id', async (req, res) => {
+	const id = req.params.id;
+
+	const blog = await Blog.findById(id);
+
+	if (!blog) {
+		return res
+			.status(404)
+			.json({ error: `blog with id: ${id} doesn't exist` });
+	}
+
+	blog.likes++;
+
+	await blog.save();
+	res.status(201).json(blog);
+});
+
 module.exports = blogRouter;

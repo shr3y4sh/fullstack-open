@@ -18,29 +18,30 @@ const testBlog = [
 	{
 		title: 'Type wars',
 		author: 'Robert C. Martin',
-		url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+		url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html'
+		// likes: 2
+	},
+	{
+		author: 'Edsger W. Dijkstra',
 		likes: 2
 	}
 ];
 
-beforeEach(async () => {
-	await Blog.deleteMany();
-
-	for (let blog of blogs) {
-		blog = new Blog(blog);
-		await blog.save();
-	}
-});
-
 describe('for blog posts', () => {
-	test('get all notes in json', async () => {
+	beforeEach(async () => {
+		await Blog.deleteMany();
+
+		await Blog.insertMany(blogs);
+	});
+
+	test('get notes in json form', async () => {
 		await api
 			.get('/api/blogs')
 			.expect(200)
 			.expect('Content-Type', /application\/json/);
 	});
 
-	test('there are exactly 4 blogs', async () => {
+	test('all blogs are returned', async () => {
 		const res = await api.get('/api/blogs');
 		assert.strictEqual(res.body.length, blogs.length);
 	});
@@ -59,32 +60,63 @@ describe('for blog posts', () => {
 		assert.strictEqual(blogList.length, blogs.length + 1);
 	});
 
-	test('empty likes default to zero', async () => {
-		const newBlog = {
-			author: 'Martin',
-			title: 'This is some weird post',
-			url: 'www.alpha.com'
-		};
+	test('increase likes of one blog', async () => {
+		const oldBlog = await Blog.findOne();
 
-		const res = await api.post('/api/blogs').send(newBlog).expect(201);
+		const res = await api.put(`/api/blogs/${oldBlog.id}`).expect(201);
+		const newBlog = res.body;
 
-		assert.strictEqual(res.body.likes, 0);
+		assert.strictEqual(newBlog.likes, oldBlog.likes + 1);
 	});
 
-	test('empty title or url values', async () => {
-		const newBlog = {
-			author: 'Testing',
-			likes: 2
-		};
-		await api.post('/api/blogs').send(newBlog).expect(400);
+	describe('about keys of blog object', () => {
+		test('empty likes default to zero', async () => {
+			const newBlog = testBlog[1];
+
+			const res = await api.post('/api/blogs').send(newBlog).expect(201);
+
+			assert.strictEqual(res.body.likes, 0);
+		});
+
+		test('empty title or url values', async () => {
+			const newBlog = testBlog[2];
+			await api.post('/api/blogs').send(newBlog).expect(400);
+		});
+
+		test('unique identifier is named "id"', async () => {
+			const res = await api.get('/api/blogs').expect(200);
+			const singleBlog = res.body[0];
+			const keysArray = Object.keys(singleBlog);
+
+			assert(keysArray.includes('id'));
+		});
 	});
 
-	test('unique identifier is named "id"', async () => {
-		const res = await api.get('/api/blogs').expect(200);
-		const singleBlog = res.body[0];
-		const keysArray = Object.keys(singleBlog);
+	describe('deletion of blog', () => {
+		test('with a valid id succeeds', async () => {
+			const blogDeleted = await Blog.findOne();
 
-		assert(keysArray.includes('id'));
+			const id = blogDeleted.id;
+
+			await api.delete(`/api/blogs/${id}`).expect(204);
+
+			const blogsAfter = await Blog.find();
+
+			assert.strictEqual(blogsAfter.length, blogs.length - 1);
+		});
+
+		test('valid non-existent id fails', async () => {
+			const blogDeleted = await Blog.findOne();
+			const id = blogDeleted.id;
+			await Blog.findByIdAndDelete(id);
+			await api.delete(`/api/blogs/${id}`).expect(404);
+		});
+
+		test('invalid id fails', async () => {
+			const id = '900000';
+
+			await api.delete(`/api/blogs/${id}`).expect(400);
+		});
 	});
 });
 
