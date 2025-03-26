@@ -2,12 +2,13 @@ GET http://localhost:3001/api/notes/
 
 ###
 
-POST http://localhost:3001/api/notes/ HTTP/1.1
+POST http://localhost:3001/api/notes/ 
 Content-Type: application/json
 
 {
-    "name": "sample",
-    "time": "Sat, 22 Mar 2025 21:52 IST"
+    "content": "for some people this is just a game",
+    "important": false,
+    "userId": "67e4428a6b7ff0316396e43c"
 }
 
 ###
@@ -18,3 +19,16 @@ Content-Type: application/json
     "content": "This is a nice note you have, be a shame if somebody...",
     "important": false
 }
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "alice",
+    "name": "Alice",
+    "password": "alphaBetaGamma"
+}
+
+###
+GET http://localhost:3001/api/users 
