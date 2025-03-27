@@ -4,11 +4,11 @@ GET http://localhost:3001/api/notes/
 
 POST http://localhost:3001/api/notes/ 
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsaWNlIiwiaWQiOiI2N2U0NDI4YTZiN2ZmMDMxNjM5NmU0M2MiLCJpYXQiOjE3NDMwNzU2NjR9.bFLEcrGMkJfjfRHlfh1hpcimue6J3dPMTS0VuUlQINY
 
 {
-    "content": "for some people this is just a game",
-    "important": false,
-    "userId": "67e4428a6b7ff0316396e43c"
+    "content": "a new note for the user alice",
+    "important": false
 }
 
 ###
@@ -32,3 +32,12 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3001/api/users 
+
+###
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+    "username": "alice",
+    "password": "alphaBetaGamma"
+}
