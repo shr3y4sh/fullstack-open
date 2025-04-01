@@ -3,7 +3,14 @@ export function Note({ notes, toggleImportance }) {
 
 	return (
 		<li key={notes.id} className='note'>
-			{notes.content} <button onClick={toggleImportance}>{label}</button>
+			<button
+				className={`${
+					notes.important ? 'important' : 'not-important'
+				} imp-btn`}
+				onClick={toggleImportance}>
+				{label}
+			</button>{' '}
+			{notes.content}
 		</li>
 	);
 }

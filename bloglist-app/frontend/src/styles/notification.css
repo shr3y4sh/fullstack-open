@@ -1,0 +1,9 @@
+.notification {
+	font-size: 1.25rem;
+	color: green;
+	border: 2px solid gray;
+	border-radius: 0.5rem;
+	padding: 0.5rem;
+	width: fit-content;
+	/* min-height: 4rem; */
+}
