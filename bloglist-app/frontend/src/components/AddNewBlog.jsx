@@ -1,27 +1,19 @@
-import { useState } from 'react';
-import { addBlogPost } from '../services/blogs';
-// import blogsData from '../../../data/blogsData';
+import { useState, forwardRef } from 'react';
+import React from 'react';
 
-const AddNewBlog = (props) => {
-	const token = props.token;
-	const blogs = props.blogs;
-	const setBlogs = props.setBlogs;
+// import blogsData from '../../../data/blogsData';
+import '../styles/blog-form.css';
+const AddNewBlog = ({ createBlog, setNotification }) => {
 	const [title, setTitle] = useState('');
 	const [author, setAuthor] = useState('');
 	const [url, setUrl] = useState('');
 
 	async function handleBlogSubmit(e) {
 		e.preventDefault();
-		const res = await addBlogPost({
-			title,
-			author,
-			url,
-			token: token
-		});
-		setBlogs([...blogs, res]);
-		props.setNotification(`A new Blog ${res.title} by ${res.author} added`);
+		await createBlog(title, author, url);
+		setNotification(`A new Blog ${title} by ${author} added`);
 		setTimeout(() => {
-			props.setNotification(null);
+			setNotification(null);
 		}, 3500);
 		setTitle('');
 		setAuthor('');
@@ -29,40 +21,45 @@ const AddNewBlog = (props) => {
 	}
 	return (
 		<div>
-			<h2>AddNewBlog</h2>
-			<form onSubmit={handleBlogSubmit}>
-				<div>
+			<h2 className='new-blog-head'>AddNewBlog</h2>
+			<form onSubmit={handleBlogSubmit} className='blog-form'>
+				<div className='form-controls'>
 					<label htmlFor='title'>Title</label>
 					<input
 						type='text'
 						name='title'
+						id='title'
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
 						required
 					/>
 				</div>
-				<div>
+				<div className='form-controls'>
 					<label htmlFor='author'>Author</label>
 					<input
 						type='text'
 						name='author'
+						id='author'
 						value={author}
 						onChange={(e) => setAuthor(e.target.value)}
 						required
 					/>
 				</div>
-				<div>
+				<div className='form-controls'>
 					<label htmlFor='url'>Url</label>
 					<input
 						type='text'
 						name='url'
+						id='url'
 						value={url}
 						onChange={(e) => setUrl(e.target.value)}
 						required
 					/>
 				</div>
-				<div>
-					<button type='submit'>Submit</button>
+				<div className='button-div'>
+					<button type='submit' className='btn'>
+						Submit
+					</button>
 				</div>
 			</form>
 		</div>

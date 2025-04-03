@@ -1,0 +1,57 @@
+.blog-form {
+	width: 80%;
+	max-width: 400px;
+	margin: auto;
+	border: 2px lightgreen solid;
+	border-radius: 0.5rem;
+	padding: 0.5rem 0rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding-bottom: 1.5rem;
+}
+
+.form-controls {
+	/* margin: 0.5rem 0rem; */
+	text-align: center;
+}
+
+.form-controls label {
+	font-size: 1.25rem;
+	margin-bottom: 0.25rem;
+	margin-top: 0.5rem;
+	display: block;
+}
+.new-blog-head {
+	font-size: 2rem;
+	/* text-align: center; */
+	margin-left: 2rem;
+}
+.form-controls input {
+	width: 15rem;
+}
+
+.like-btn,
+.btn {
+	border: none;
+	background-color: rgb(156, 213, 156);
+	color: rgb(2, 22, 22);
+	border-radius: 0.25rem;
+}
+
+.btn {
+	width: 5rem;
+	height: 2rem;
+	margin-top: 1rem;
+
+	/* margin: auto; */
+}
+
+.like-btn {
+	height: 1.5rem;
+	width: 3rem;
+	margin-left: 0.5rem;
+	margin-top: 0;
+	/* margin-bottom: 0.75rem; */
+}

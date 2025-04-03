@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import React from 'react';
 import { login } from '../services/login';
 
 export default ({ setUser }) => {
@@ -16,8 +17,8 @@ export default ({ setUser }) => {
 	return (
 		<>
 			<h1>Login to post blogs</h1>
-			<form onSubmit={handleLogin}>
-				<div>
+			<form onSubmit={handleLogin} className='blog-form'>
+				<div className='form-controls'>
 					<label htmlFor='username'>Username:</label>
 					<input
 						type='text'
@@ -26,7 +27,7 @@ export default ({ setUser }) => {
 						onChange={({ target }) => setUsername(target.value)}
 					/>
 				</div>
-				<div>
+				<div className='form-controls'>
 					<label htmlFor='password'>Password:</label>
 					<input
 						type='password'
@@ -36,7 +37,9 @@ export default ({ setUser }) => {
 					/>
 				</div>
 				<div>
-					<button type='submit'>Login</button>
+					<button type='submit' className='btn'>
+						Login
+					</button>
 				</div>
 			</form>
 		</>
