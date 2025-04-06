@@ -6,11 +6,10 @@ import React from 'react';
 const NoteForm = () => {
 	const dispatch = useDispatch();
 
-	function addNote(e) {
+	async function addNote(e) {
 		e.preventDefault();
 		const content = e.target.note.value;
 		e.target.note.value = '';
-
 		dispatch(createNote(content));
 	}
 	return (
