@@ -10,7 +10,6 @@ export default ({ setUser }) => {
 		event.preventDefault();
 		const username = event.target.username.value;
 		const password = event.target.password.value;
-		console.log(username, password);
 		const data = await login({ username, password });
 		setUser({ token: data.token, username: username });
 	}
