@@ -1,0 +1,10 @@
+body {
+	background-color: black;
+	color: white;
+}
+
+input {
+	background-color: inherit;
+	color: inherit;
+	border: 1px solid white;
+}

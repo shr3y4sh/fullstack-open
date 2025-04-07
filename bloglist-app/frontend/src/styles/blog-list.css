@@ -1,0 +1,23 @@
+div.blog {
+	/* text-align: center; */
+	border: 2px solid white;
+	border-radius: 0.75rem;
+	margin-bottom: 1rem;
+	margin-right: 2rem;
+	max-width: 900px;
+	padding: 0.5rem;
+	padding-bottom: 1rem;
+}
+
+.blog-list .title,
+.blog-list .author {
+	font-size: 1.5rem;
+}
+
+.blog-list .likes {
+	font-size: 1.25rem;
+}
+
+p.url {
+	color: rgb(247, 139, 139);
+}
