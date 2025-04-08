@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { Table, Form, Button, Alert, Nav, Navbar } from 'react-bootstrap';
 
 import {
-	BrowserRouter as Router,
 	Routes,
 	Route,
 	Link,
@@ -42,13 +42,18 @@ const Note = ({ note }) => {
 const Notes = ({ notes }) => (
 	<div>
 		<h2>Notes</h2>
-		<ul>
-			{notes.map((note) => (
-				<li key={note.id}>
-					<Link to={`/notes/${note.id}`}>{note.content}</Link>
-				</li>
-			))}
-		</ul>
+		<Table striped>
+			<tbody>
+				{notes.map((note) => (
+					<tr key={note.id}>
+						<td>
+							<Link to={`/notes/${note.id}`}>{note.content}</Link>
+						</td>
+						<td>{note.user}</td>
+					</tr>
+				))}
+			</tbody>
+		</Table>
 	</div>
 );
 
@@ -75,15 +80,19 @@ const Login = (props) => {
 	return (
 		<div>
 			<h2>login</h2>
-			<form onSubmit={onSubmit}>
-				<div>
-					username: <input />
-				</div>
-				<div>
-					password: <input type='password' />
-				</div>
-				<button type='submit'>login</button>
-			</form>
+			<Form onSubmit={onSubmit}>
+				<Form.Group>
+					<Form.Label>username:</Form.Label>
+					<Form.Control type='text' name='username' />
+				</Form.Group>
+				<Form.Group>
+					<Form.Label>password:</Form.Label>
+					<Form.Control type='password' />
+				</Form.Group>
+				<Button variant='primary' type='submit'>
+					login
+				</Button>
+			</Form>
 		</div>
 	);
 };
@@ -91,6 +100,7 @@ const Login = (props) => {
 const App = () => {
 	const match = useMatch('/notes/:id');
 
+	// eslint-disable-next-line no-unused-vars
 	const [notes, setNotes] = useState([
 		{
 			id: 1,
@@ -113,12 +123,18 @@ const App = () => {
 	]);
 
 	const [user, setUser] = useState(null);
+	const [message, setMessage] = useState(null);
 	const note = match
 		? notes.find((note) => note.id === Number(match.params.id))
 		: null;
 
 	const login = (user) => {
 		setUser(user);
+
+		setMessage(`Welcome ${user}`);
+		setTimeout(() => {
+			setMessage(null);
+		}, 5000);
 	};
 
 	const padding = {
@@ -126,25 +142,39 @@ const App = () => {
 	};
 
 	return (
-		<div>
-			<div>
-				<Link style={padding} to='/'>
-					home
-				</Link>
-				<Link style={padding} to='/notes'>
-					notes
-				</Link>
-				<Link style={padding} to='/users'>
-					users
-				</Link>
-				{user ? (
-					<em>{user} logged in</em>
-				) : (
-					<Link style={padding} to='/login'>
-						login
-					</Link>
-				)}
-			</div>
+		<div className='container'>
+			{message && <Alert variant='success'>{message}</Alert>}
+			<Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
+				<Navbar.Toggle aria-controls='responsive-navbar-nav' />
+				<Navbar.Collapse id='responsive-navbar-nav'>
+					<Nav className='me-auto'>
+						<Nav.Link href='#' as='span'>
+							<Link style={padding} to='/'>
+								home
+							</Link>
+						</Nav.Link>
+						<Nav.Link href='#' as='span'>
+							<Link style={padding} to='/notes'>
+								notes
+							</Link>
+						</Nav.Link>
+						<Nav.Link href='#' as='span'>
+							<Link style={padding} to='/users'>
+								users
+							</Link>
+						</Nav.Link>
+						<Nav.Link href='#' as='span'>
+							{user ? (
+								<em style={padding}>{user} logged in</em>
+							) : (
+								<Link style={padding} to='/login'>
+									login
+								</Link>
+							)}
+						</Nav.Link>
+					</Nav>
+				</Navbar.Collapse>
+			</Navbar>
 
 			<Routes>
 				<Route path='/notes/:id' element={<Note note={note} />} />
