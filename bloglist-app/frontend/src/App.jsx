@@ -1,108 +1,75 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useContext, useRef } from 'react';
 import React from 'react';
-import { addBlogPost } from './services/blogs';
-import Blog from './components/Blog';
+import { useQuery } from '@tanstack/react-query';
+
+import { getAll } from './services/blogs';
+
+import BlogList from './components/BlogList';
 import AddNewBlog from './components/AddNewBlog';
-import Login_form from './components/Login_form';
-import { getAll, deleteBlog } from './services/blogs';
+import Login_Form from './components/Login_form';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
+import { NotificationContext } from './redux/notification-reducer';
+import { useUserLogin } from './redux/user-reducer';
 
 const App = () => {
-	const [blogs, setBlogs] = useState([]);
-	const [user, setUser] = useState(null);
-	const [notification, setNotification] = useState(null);
-	const blogRef = useRef();
+	const { isPending, isError, data, error } = useQuery({
+		queryKey: ['blogs'],
+		queryFn: getAll
+	});
+
+	const blogRef = useRef(); // using ref and imperative_handle to toggle visibility after adding new blog
+
+	const notification = useContext(NotificationContext);
+
+	const user = useUserLogin();
 
 	useEffect(() => {
-		getAll().then((blogs) => {
-			blogs.sort((a, b) => -a.likes + b.likes);
-			return setBlogs(blogs);
-		});
-	}, []);
-
-	useEffect(() => {
-		if (!user) {
-			const loggedUser = window.localStorage.getItem('userLogged');
-			const user = JSON.parse(loggedUser);
-			setUser(user);
+		if (!user.data) {
+			user.setExistingLoggedUser();
 		}
 	}, []);
-
-	useEffect(() => {
-		if (user) {
-			window.localStorage.setItem('userLogged', JSON.stringify(user));
-		}
-	}, [user]);
-
-	async function addBlog(title, author, url) {
-		blogRef.current.toggleVisibility();
-		const nextBlog = await addBlogPost({
-			title,
-			author,
-			url,
-			token: user.token
-		});
-		setBlogs([...blogs, nextBlog]);
-	}
-
-	async function handleBlogDelete(blog) {
-		const reply = confirm(`Remove blog ${blog.title}?`);
-		if (!reply) {
-			return;
-		}
-		await deleteBlog(blog, user.token);
-		const blogList = blogs.filter((b) => b.id !== blog.id);
-		setBlogs(blogList);
-	}
 
 	function handleLogout() {
-		window.localStorage.removeItem('userLogged');
-		setUser(null);
+		user.logoutUser();
 	}
-	const userLogin = () => (
-		<div>
-			<Login_form setUser={setUser} />
-		</div>
-	);
-	const blogList = () => (
-		<>
-			<h2 className='new-blog-head'>Blogs</h2>
-			<ul>
-				{blogs.map((blog) => (
-					<Blog
-						key={blog.id}
-						blog={blog}
-						token={user.token}
-						deleteBlog={handleBlogDelete}
-					/>
-				))}
-			</ul>
-		</>
-	);
+
+	if (isPending) {
+		return <div>Loading...</div>;
+	}
+
+	if (isError) {
+		return (
+			<div>
+				{' '}
+				<h2>Error fetching request</h2>
+				<p>{error.message}</p>
+			</div>
+		);
+	}
+
 	return (
 		<div>
 			{notification !== null && <Notification message={notification} />}
-			{user ? (
+			{user.data ? (
 				<>
 					<div className='login'>
-						<span>Logged in user: {user.username}</span>
+						<span>Logged in user: {user.data.username}</span>
 
 						<button className='btn' onClick={handleLogout}>
 							Logout
 						</button>
 					</div>
 					<Togglable buttonLabel='New Blog' ref={blogRef}>
-						<AddNewBlog
-							createBlog={addBlog}
-							setNotification={setNotification}
-						/>
+						<AddNewBlog token={user.data.token} ref={blogRef} />
 					</Togglable>
 
-					{blogList()}
+					<BlogList blogs={data} token={user.data.token} />
 				</>
 			) : (
-				userLogin()
+				<div>
+					<Login_Form />
+				</div>
 			)}
 		</div>
 	);

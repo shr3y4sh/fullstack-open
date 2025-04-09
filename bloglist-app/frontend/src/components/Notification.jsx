@@ -1,7 +1,7 @@
 import '../styles/notification.css';
-import React from 'react';
-const Notification = (props) => {
-	return <div className='notification'>{`${props.message}`}</div>;
+
+const Notification = ({ message }) => {
+	return <div className='notification'>{`${message}`}</div>;
 };
 
 export default Notification;
