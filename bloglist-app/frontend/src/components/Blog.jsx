@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import React from 'react';
 import '../styles/blog-list.css';
-import { incrementLike } from '../services/blogs';
+import { useDispatch } from 'react-redux';
+import { updateBlogs } from '../redux/blogs-reducer';
 
 const Blog = ({ blog, token, deleteBlog }) => {
 	const [visible, setVisible] = useState(false);
 
-	const [likes, setLikes] = useState(blog.likes);
+	const dispatch = useDispatch();
 
 	const buttonLabel = () => {
 		if (visible) {
@@ -16,9 +17,8 @@ const Blog = ({ blog, token, deleteBlog }) => {
 		}
 	};
 
-	async function handleLike() {
-		const newBlog = await incrementLike(blog, token);
-		setLikes(newBlog.likes);
+	async function handleLike(blog) {
+		dispatch(updateBlogs(blog, token));
 	}
 
 	return (
@@ -33,8 +33,10 @@ const Blog = ({ blog, token, deleteBlog }) => {
 				<>
 					<p className='url'>{blog.url}</p>
 					<p className='likes'>
-						Likes: {likes}
-						<button className='like-btn' onClick={handleLike}>
+						Likes: {blog.likes}
+						<button
+							className='like-btn'
+							onClick={() => handleLike(blog)}>
 							like
 						</button>
 					</p>

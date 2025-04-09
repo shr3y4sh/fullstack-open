@@ -1,85 +1,37 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import React from 'react';
-import { addBlogPost } from './services/blogs';
-import Blog from './components/Blog';
+import { useSelector, useDispatch } from 'react-redux';
+import BlogList from './components/BlogList';
 import AddNewBlog from './components/AddNewBlog';
-import Login_form from './components/Login_form';
-import { getAll, deleteBlog } from './services/blogs';
+import Login_Form from './components/Login_form';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 
+import { setExistingLoggedUser, logoutUser } from './redux/user-reducer';
+
+import { getAllBlogs } from './redux/blogs-reducer';
+
 const App = () => {
-	const [blogs, setBlogs] = useState([]);
-	const [user, setUser] = useState(null);
-	const [notification, setNotification] = useState(null);
-	const blogRef = useRef();
+	const user = useSelector((state) => state.user);
+
+	const notification = useSelector((state) => state.notifications);
+	const blogs = useSelector((state) => state.blogs);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-		getAll().then((blogs) => {
-			blogs.sort((a, b) => -a.likes + b.likes);
-			return setBlogs(blogs);
-		});
+		dispatch(getAllBlogs());
 	}, []);
 
 	useEffect(() => {
 		if (!user) {
-			const loggedUser = window.localStorage.getItem('userLogged');
-			const user = JSON.parse(loggedUser);
-			setUser(user);
+			dispatch(setExistingLoggedUser());
 		}
 	}, []);
 
-	useEffect(() => {
-		if (user) {
-			window.localStorage.setItem('userLogged', JSON.stringify(user));
-		}
-	}, [user]);
-
-	async function addBlog(title, author, url) {
-		blogRef.current.toggleVisibility();
-		const nextBlog = await addBlogPost({
-			title,
-			author,
-			url,
-			token: user.token
-		});
-		setBlogs([...blogs, nextBlog]);
-	}
-
-	async function handleBlogDelete(blog) {
-		const reply = confirm(`Remove blog ${blog.title}?`);
-		if (!reply) {
-			return;
-		}
-		await deleteBlog(blog, user.token);
-		const blogList = blogs.filter((b) => b.id !== blog.id);
-		setBlogs(blogList);
-	}
-
 	function handleLogout() {
-		window.localStorage.removeItem('userLogged');
-		setUser(null);
+		dispatch(logoutUser());
 	}
-	const userLogin = () => (
-		<div>
-			<Login_form setUser={setUser} />
-		</div>
-	);
-	const blogList = () => (
-		<>
-			<h2 className='new-blog-head'>Blogs</h2>
-			<ul>
-				{blogs.map((blog) => (
-					<Blog
-						key={blog.id}
-						blog={blog}
-						token={user.token}
-						deleteBlog={handleBlogDelete}
-					/>
-				))}
-			</ul>
-		</>
-	);
+
 	return (
 		<div>
 			{notification !== null && <Notification message={notification} />}
@@ -92,17 +44,16 @@ const App = () => {
 							Logout
 						</button>
 					</div>
-					<Togglable buttonLabel='New Blog' ref={blogRef}>
-						<AddNewBlog
-							createBlog={addBlog}
-							setNotification={setNotification}
-						/>
+					<Togglable buttonLabel='New Blog'>
+						<AddNewBlog token={user.token} />
 					</Togglable>
 
-					{blogList()}
+					<BlogList blogs={blogs} token={user.token} />
 				</>
 			) : (
-				userLogin()
+				<div>
+					<Login_Form />
+				</div>
 			)}
 		</div>
 	);

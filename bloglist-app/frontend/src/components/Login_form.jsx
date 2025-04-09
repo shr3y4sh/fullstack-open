@@ -1,17 +1,17 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import React from 'react';
-import { login } from '../services/login';
+import { loginUser } from '../redux/user-reducer';
 
-export default ({ setUser }) => {
+const Login_Form = () => {
+	const dispatch = useDispatch();
+
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
 	async function handleLogin(event) {
 		event.preventDefault();
-		const username = event.target.username.value;
-		const password = event.target.password.value;
-		const data = await login({ username, password });
-		setUser({ token: data.token, username: username });
+		dispatch(loginUser({ username, password }));
 	}
 	return (
 		<>
@@ -44,3 +44,5 @@ export default ({ setUser }) => {
 		</>
 	);
 };
+
+export default Login_Form;
