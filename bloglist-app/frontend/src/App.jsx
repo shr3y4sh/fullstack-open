@@ -9,8 +9,8 @@ import AddNewBlog from './components/AddNewBlog';
 import Login_Form from './components/Login_form';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
-import { NotificationContext } from './redux/notification-reducer';
-import { useUserLogin } from './redux/user-reducer';
+import { NotificationContext } from './contexts/notification-reducer';
+import { useUserLogin } from './contexts/user-reducer';
 
 const App = () => {
 	const { isPending, isError, data, error } = useQuery({
@@ -41,7 +41,6 @@ const App = () => {
 	if (isError) {
 		return (
 			<div>
-				{' '}
 				<h2>Error fetching request</h2>
 				<p>{error.message}</p>
 			</div>

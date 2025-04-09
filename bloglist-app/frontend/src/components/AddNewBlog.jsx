@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addBlogPost } from '../services/blogs';
 import React from 'react';
-import { useSetNotifications } from '../redux/notification-reducer';
+import { useSetNotifications } from '../contexts/notification-reducer';
 import '../styles/blog-form.css';
 
 const AddNewBlog = ({ token, ref }) => {

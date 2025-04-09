@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSetNotifications } from '../redux/notification-reducer';
+import { useSetNotifications } from '../contexts/notification-reducer';
 import { incrementLike, deleteBlogFromServer } from '../services/blogs';
 import React from 'react';
 import '../styles/blog-list.css';
