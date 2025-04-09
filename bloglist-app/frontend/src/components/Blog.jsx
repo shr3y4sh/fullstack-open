@@ -1,13 +1,25 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSetNotifications } from '../redux/notification-reducer';
+import { incrementLike, deleteBlogFromServer } from '../services/blogs';
 import React from 'react';
 import '../styles/blog-list.css';
-import { useDispatch } from 'react-redux';
-import { updateBlogs } from '../redux/blogs-reducer';
 
-const Blog = ({ blog, token, deleteBlog }) => {
+const Blog = ({ blog, token }) => {
 	const [visible, setVisible] = useState(false);
 
-	const dispatch = useDispatch();
+	const setNotification = useSetNotifications();
+
+	const queryClient = useQueryClient();
+
+	const updateMutation = useMutation({
+		mutationFn: async (data) => await incrementLike(data, token),
+
+		onSuccess: (data) =>
+			queryClient.setQueryData(['blogs'], (oldBlogs) =>
+				oldBlogs.map((blog) => (blog.id === data.id ? data : blog))
+			)
+	});
 
 	const buttonLabel = () => {
 		if (visible) {
@@ -17,8 +29,26 @@ const Blog = ({ blog, token, deleteBlog }) => {
 		}
 	};
 
-	async function handleLike(blog) {
-		dispatch(updateBlogs(blog, token));
+	const deleteBlogMutation = useMutation({
+		mutationFn: async (data) => await deleteBlogFromServer(data, token),
+		onSuccess: () =>
+			queryClient.setQueryData(['blogs'], (oldBlogs) =>
+				oldBlogs.filter((b) => b.id !== blog.id)
+			)
+	});
+
+	function handleBlogDelete() {
+		const reply = confirm(`Remove blog ${blog.title}?`);
+		if (!reply) {
+			return;
+		}
+
+		deleteBlogMutation.mutate(blog);
+		setNotification(`${blog.title} was deleted`);
+	}
+
+	function handleLike(blog) {
+		updateMutation.mutate(blog);
 	}
 
 	return (
@@ -42,9 +72,7 @@ const Blog = ({ blog, token, deleteBlog }) => {
 					</p>
 					<div className='author'>{blog.author}</div>
 					<div>
-						<button
-							onClick={() => deleteBlog(blog)}
-							className='btn'>
+						<button onClick={handleBlogDelete} className='btn'>
 							Delete
 						</button>
 					</div>

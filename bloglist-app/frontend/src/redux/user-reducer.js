@@ -1,54 +1,57 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createContext, useContext } from 'react';
 
 import { login } from '../services/login';
 
-const userSlice = createSlice({
-	name: 'user',
+export const UserContext = createContext(null);
+export const UserDispatch = createContext(null);
 
-	initialState: null,
-
-	reducers: {
-		setUser(_state, action) {
+export const userReducer = (state, action) => {
+	switch (action.type) {
+		case 'SetUser':
 			return action.payload;
+
+		case 'RemoveUser':
+			return null;
+
+		default:
+			return state;
+	}
+};
+
+export const useUserLogin = () => {
+	const dispatch = useContext(UserDispatch);
+	const userLoggedIn = useContext(UserContext);
+
+	return {
+		data: userLoggedIn,
+		setExistingLoggedUser: () => {
+			let user = localStorage.getItem('userLogged');
+			if (!user) {
+				return;
+			}
+			user = JSON.parse(user);
+			dispatch({
+				type: 'SetUser',
+				payload: user
+			});
 		},
 
-		removeUser() {
-			return null;
+		loginUser: async (userInput) => {
+			const user = await login(userInput);
+
+			dispatch({
+				type: 'SetUser',
+				payload: user
+			});
+
+			localStorage.setItem('userLogged', JSON.stringify(user));
+		},
+
+		logoutUser: () => {
+			localStorage.removeItem('userLogged');
+			dispatch({
+				type: 'RemoveUser'
+			});
 		}
-	}
-});
-
-const { setUser, removeUser } = userSlice.actions;
-
-export const setExistingLoggedUser = () => {
-	return (dispatch) => {
-		let user = localStorage.getItem('userLogged');
-
-		if (!user) {
-			return;
-		}
-
-		user = JSON.parse(user);
-
-		dispatch(setUser(user));
 	};
 };
-
-export const loginUser = (userInput) => {
-	return async (dispatch) => {
-		const user = await login(userInput);
-
-		dispatch(setUser(user));
-
-		localStorage.setItem('userLogged', JSON.stringify(user));
-	};
-};
-
-export const logoutUser = () => {
-	return (dispatch) => {
-		localStorage.removeItem('userLogged');
-		dispatch(removeUser());
-	};
-};
-
-export default userSlice.reducer;

@@ -1,31 +1,35 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createContext, useContext } from 'react';
 
-const notificationSlice = createSlice({
-	name: 'notifications',
+export const NotificationContext = createContext(null);
 
-	initialState: null,
+export const NotificationsDispatch = createContext(null);
 
-	reducers: {
-		show(_state, action) {
+export const notificationReducer = (state, action) => {
+	switch (action.type) {
+		case 'SHOW':
 			return action.payload;
-		},
 
-		destroy() {
+		case 'DESTROY':
 			return null;
-		}
+
+		default:
+			return state;
 	}
-});
+};
 
-const { show, destroy } = notificationSlice.actions;
+export const useSetNotifications = () => {
+	const dispatch = useContext(NotificationsDispatch);
 
-export default notificationSlice.reducer;
-
-export const setNotification = (message) => {
-	return (dispatch) => {
-		dispatch(show(message));
+	return (message) => {
+		dispatch({
+			type: 'SHOW',
+			payload: message
+		});
 
 		setTimeout(() => {
-			dispatch(destroy());
+			dispatch({
+				type: 'DESTROY'
+			});
 		}, 3500);
 	};
 };

@@ -1,54 +1,70 @@
-import { useEffect } from 'react';
+import { useEffect, useContext, useRef } from 'react';
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useQuery } from '@tanstack/react-query';
+
+import { getAll } from './services/blogs';
+
 import BlogList from './components/BlogList';
 import AddNewBlog from './components/AddNewBlog';
 import Login_Form from './components/Login_form';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
-
-import { setExistingLoggedUser, logoutUser } from './redux/user-reducer';
-
-import { getAllBlogs } from './redux/blogs-reducer';
+import { NotificationContext } from './redux/notification-reducer';
+import { useUserLogin } from './redux/user-reducer';
 
 const App = () => {
-	const user = useSelector((state) => state.user);
+	const { isPending, isError, data, error } = useQuery({
+		queryKey: ['blogs'],
+		queryFn: getAll
+	});
 
-	const notification = useSelector((state) => state.notifications);
-	const blogs = useSelector((state) => state.blogs);
-	const dispatch = useDispatch();
+	const blogRef = useRef(); // using ref and imperative_handle to toggle visibility after adding new blog
+
+	const notification = useContext(NotificationContext);
+
+	const user = useUserLogin();
 
 	useEffect(() => {
-		dispatch(getAllBlogs());
-	}, []);
-
-	useEffect(() => {
-		if (!user) {
-			dispatch(setExistingLoggedUser());
+		if (!user.data) {
+			user.setExistingLoggedUser();
 		}
 	}, []);
 
 	function handleLogout() {
-		dispatch(logoutUser());
+		user.logoutUser();
+	}
+
+	if (isPending) {
+		return <div>Loading...</div>;
+	}
+
+	if (isError) {
+		return (
+			<div>
+				{' '}
+				<h2>Error fetching request</h2>
+				<p>{error.message}</p>
+			</div>
+		);
 	}
 
 	return (
 		<div>
 			{notification !== null && <Notification message={notification} />}
-			{user ? (
+			{user.data ? (
 				<>
 					<div className='login'>
-						<span>Logged in user: {user.username}</span>
+						<span>Logged in user: {user.data.username}</span>
 
 						<button className='btn' onClick={handleLogout}>
 							Logout
 						</button>
 					</div>
-					<Togglable buttonLabel='New Blog'>
-						<AddNewBlog token={user.token} />
+					<Togglable buttonLabel='New Blog' ref={blogRef}>
+						<AddNewBlog token={user.data.token} ref={blogRef} />
 					</Togglable>
 
-					<BlogList blogs={blogs} token={user.token} />
+					<BlogList blogs={data} token={user.data.token} />
 				</>
 			) : (
 				<div>

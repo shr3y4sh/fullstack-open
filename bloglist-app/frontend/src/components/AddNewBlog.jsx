@@ -1,36 +1,38 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { addBlogPost } from '../services/blogs';
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { addNewBlog } from '../redux/blogs-reducer';
-import { setNotification } from '../redux/notification-reducer';
-
-// import blogsData from '../../../data/blogsData';
+import { useSetNotifications } from '../redux/notification-reducer';
 import '../styles/blog-form.css';
-const AddNewBlog = ({ token }) => {
+
+const AddNewBlog = ({ token, ref }) => {
 	const [title, setTitle] = useState('');
 	const [author, setAuthor] = useState('');
 	const [url, setUrl] = useState('');
 
-	const dispatch = useDispatch();
+	const queryClient = useQueryClient();
+
+	const blogMutation = useMutation({
+		mutationFn: async (data) => {
+			return await addBlogPost(data, token);
+		},
+		onSuccess: (data) => {
+			queryClient.setQueriesData(['blogs'], (oldBlogs) =>
+				oldBlogs.concat(data)
+			);
+		}
+	});
+
+	const setNotification = useSetNotifications();
 
 	async function handleBlogSubmit(e) {
 		e.preventDefault();
-		dispatch(
-			addNewBlog(
-				{
-					title,
-					author,
-					url
-				},
-				token
-			)
-		);
-		dispatch(
-			setNotification(`A new blog: ${title} by ${author} was added`)
-		);
+		blogMutation.mutate({ title, author, url });
+		setNotification(`A new blog: ${title} by ${author} was added`);
 		setTitle('');
 		setAuthor('');
 		setUrl('');
+		ref.current.toggleVisibility();
 	}
 	return (
 		<div>

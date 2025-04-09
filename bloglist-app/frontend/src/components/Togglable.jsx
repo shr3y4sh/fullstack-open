@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useImperativeHandle } from 'react';
 import React from 'react';
 
-const Togglable = ({ buttonLabel, children }) => {
+const Togglable = ({ buttonLabel, children, ref }) => {
 	const [visible, setVisible] = useState(false);
 	const hideWhenVisible = { display: visible ? 'none' : '' };
 	const showWhenVisible = { display: visible ? '' : 'none' };
@@ -9,6 +9,12 @@ const Togglable = ({ buttonLabel, children }) => {
 	function toggleVisibility() {
 		setVisible((v) => !v);
 	}
+
+	useImperativeHandle(ref, () => {
+		return {
+			toggleVisibility
+		};
+	});
 
 	return (
 		<div style={{ textAlign: 'center' }}>
