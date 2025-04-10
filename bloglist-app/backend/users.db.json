@@ -1,0 +1,30 @@
+[
+	{
+		"username": "jane_doe",
+		"password": "pass1234"
+	},
+	{
+		"username": "tech_guru",
+		"password": "techpass1"
+	},
+	{
+		"username": "travelbug21",
+		"password": "travel321"
+	},
+	{
+		"username": "chef_amy",
+		"password": "cookmeup"
+	},
+	{
+		"username": "money_sensei",
+		"password": "savemoney"
+	},
+	{
+		"username": "frontend_wiz",
+		"password": "wizarddev"
+	},
+	{
+		"username": "zen_master",
+		"password": "breathe123"
+	}
+]

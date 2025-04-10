@@ -2,13 +2,14 @@ import { useEffect, useContext, useRef } from 'react';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-import { getAll } from './services/blogs';
-
 import BlogList from './components/BlogList';
 import AddNewBlog from './components/AddNewBlog';
 import Login_Form from './components/Login_form';
+import SignupForm from './components/SignupForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
+
+import { getAll } from './services/blogs';
 import { NotificationContext } from './contexts/notification-reducer';
 import { useUserLogin } from './contexts/user-reducer';
 
@@ -28,7 +29,7 @@ const App = () => {
 		if (!user.data) {
 			user.setExistingLoggedUser();
 		}
-	}, []);
+	}, [user.data]);
 
 	function handleLogout() {
 		user.logoutUser();
@@ -67,6 +68,7 @@ const App = () => {
 				</>
 			) : (
 				<div>
+					<SignupForm />
 					<Login_Form />
 				</div>
 			)}

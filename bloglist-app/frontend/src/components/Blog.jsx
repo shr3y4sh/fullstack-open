@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetNotifications } from '../contexts/notification-reducer';
 import { incrementLike, deleteBlogFromServer } from '../services/blogs';
 import React from 'react';
-import '../styles/blog-list.css';
 
 const Blog = ({ blog, token }) => {
 	const [visible, setVisible] = useState(false);
@@ -48,7 +47,9 @@ const Blog = ({ blog, token }) => {
 	}
 
 	function handleLike(blog) {
-		updateMutation.mutate(blog);
+		updateMutation.mutate({
+			...blog
+		});
 	}
 
 	return (

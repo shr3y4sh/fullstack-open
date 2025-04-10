@@ -1,0 +1,122 @@
+[
+	{
+		"title": "10 Tips to Boost Productivity",
+		"url": "https://fakeblogsite.com/posts/boost-productivity",
+		"likes": 87,
+		"author": "jane_doe"
+	},
+	{
+		"title": "The Future of AI in Healthcare",
+		"url": "https://fakeblogsite.com/posts/ai-healthcare",
+		"likes": 142,
+		"author": "tech_guru"
+	},
+	{
+		"title": "Exploring the Mountains of Peru",
+		"url": "https://fakeblogsite.com/posts/peru-mountains",
+		"likes": 59,
+		"author": "travelbug21"
+	},
+	{
+		"title": "5 Easy Vegan Recipes for Beginners",
+		"url": "https://fakeblogsite.com/posts/vegan-recipes",
+		"likes": 33,
+		"author": "chef_amy"
+	},
+	{
+		"title": "How to Save Money on Groceries",
+		"url": "https://fakeblogsite.com/posts/save-groceries",
+		"likes": 76,
+		"author": "money_sensei"
+	},
+	{
+		"title": "The Art of Minimalist Living",
+		"url": "https://fakeblogsite.com/posts/minimalism",
+		"likes": 91,
+		"author": "jane_doe"
+	},
+	{
+		"title": "React vs Vue: A Developer's Perspective",
+		"url": "https://fakeblogsite.com/posts/react-vs-vue",
+		"likes": 105,
+		"author": "frontend_wiz"
+	},
+	{
+		"title": "Understanding Bitcoin in Simple Terms",
+		"url": "https://fakeblogsite.com/posts/bitcoin-basics",
+		"likes": 88,
+		"author": "tech_guru"
+	},
+	{
+		"title": "My Journey with Daily Journaling",
+		"url": "https://fakeblogsite.com/posts/journaling",
+		"likes": 29,
+		"author": "travelbug21"
+	},
+	{
+		"title": "Top 5 Coffee Shops in NYC",
+		"url": "https://fakeblogsite.com/posts/nyc-coffee",
+		"likes": 65,
+		"author": "chef_amy"
+	},
+	{
+		"title": "The Science of Sleep and How to Improve It",
+		"url": "https://fakeblogsite.com/posts/sleep-science",
+		"likes": 117,
+		"author": "jane_doe"
+	},
+	{
+		"title": "How I Paid Off My Student Loans in 2 Years",
+		"url": "https://fakeblogsite.com/posts/student-loans",
+		"likes": 130,
+		"author": "money_sensei"
+	},
+	{
+		"title": "Mastering CSS Grid in 2025",
+		"url": "https://fakeblogsite.com/posts/css-grid-2025",
+		"likes": 72,
+		"author": "frontend_wiz"
+	},
+	{
+		"title": "Backpacking Through Southeast Asia",
+		"url": "https://fakeblogsite.com/posts/se-asia-backpacking",
+		"likes": 48,
+		"author": "travelbug21"
+	},
+	{
+		"title": "Beginner's Guide to Meditation",
+		"url": "https://fakeblogsite.com/posts/meditation-guide",
+		"likes": 55,
+		"author": "zen_master"
+	},
+	{
+		"title": "How to Start a YouTube Channel in 2025",
+		"url": "https://fakeblogsite.com/posts/start-youtube",
+		"likes": 111,
+		"author": "tech_guru"
+	},
+	{
+		"title": "Best Budget Laptops for Developers",
+		"url": "https://fakeblogsite.com/posts/budget-laptops",
+		"likes": 97,
+		"author": "frontend_wiz"
+	},
+	{
+		"title": "Meal Prep Hacks for Busy People",
+		"url": "https://fakeblogsite.com/posts/meal-prep-hacks",
+		"likes": 43,
+		"author": "chef_amy"
+	},
+	{
+		"title": "The Mental Health Benefits of Nature",
+		"url": "https://fakeblogsite.com/posts/nature-mental-health",
+		"likes": 68,
+		"author": "zen_master"
+	},
+	{
+		"title": "Why Financial Literacy Should Be Taught in Schools",
+		"url": "https://fakeblogsite.com/posts/financial-literacy",
+		"likes": 149,
+		"author": "money_sensei"
+	}
+]

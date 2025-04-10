@@ -7,12 +7,13 @@ const blogRouter = require('./controllers/blogPosts');
 const userRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const middleware = require('./utils/middleware');
+const bulkController = require('./mongo');
 const logger = require('./utils/logger');
 const mongoose = require('mongoose');
 
 mongoose.set('strictQuery', false);
 
-logger.info('connecting to', config.DB_URI);
+logger.info('connecting to mongodb');
 
 mongoose
 	.connect(config.DB_URI)
