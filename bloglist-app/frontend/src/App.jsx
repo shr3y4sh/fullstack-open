@@ -2,6 +2,9 @@ import { useEffect, useContext, useRef } from 'react';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
+import '@fontsource/roboto/500.css';
+import { Button, Typography } from '@mui/material';
+
 import BlogList from './components/BlogList';
 import AddNewBlog from './components/AddNewBlog';
 import Login_Form from './components/Login_form';
@@ -53,13 +56,16 @@ const App = () => {
 			{notification !== null && <Notification message={notification} />}
 			{user.data ? (
 				<>
-					<div className='login'>
-						<span>Logged in user: {user.data.username}</span>
+					<Typography variant='subtitle1'>
+						Logged in user: {user.data.username}
+					</Typography>
 
-						<button className='btn' onClick={handleLogout}>
-							Logout
-						</button>
-					</div>
+					<Button
+						variant='outlined'
+						className='btn'
+						onClick={handleLogout}>
+						Logout
+					</Button>
 					<Togglable buttonLabel='New Blog' ref={blogRef}>
 						<AddNewBlog token={user.data.token} ref={blogRef} />
 					</Togglable>

@@ -1,43 +1,49 @@
 import { useState } from 'react';
 
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Typography } from '@mui/material';
 
 import { useUserLogin } from '../contexts/user-reducer';
 import { signUp } from '../services/login';
 
 const SignupForm = () => {
-	const [username, setusername] = useState();
-	const [_fullName, setFullName] = useState();
-	const [password, setPassword] = useState();
+	const [username, setusername] = useState('');
+	const [name, setFullName] = useState('');
+	const [password, setPassword] = useState('');
 
 	const user = useUserLogin();
 
-	async function handleFormSubmit({ target }) {
-		const Username = target.username.value;
-		const Fullname = target.full_name.value;
-		const Password = target.password.value;
-
-		await signUp({ Username, Fullname, Password });
+	async function handleFormSubmit(e) {
+		e.preventDefault();
+		await signUp({ username, name, password });
 		await user.loginUser({ username, password });
-
-		setusername(null);
-		setFullName(null);
-		setPassword(null);
 	}
 
 	return (
 		<form onSubmit={handleFormSubmit}>
-			<h1>Sign Up</h1>
+			<Typography variant='h3'>Sign Up</Typography>
 			<div>
-				<TextField label='username' name='username' />
+				<TextField
+					label='username'
+					value={username}
+					onChange={({ target }) => setusername(target.value)}
+				/>
 			</div>
 
 			<div>
-				<TextField label='full name' name='full_name' />
+				<TextField
+					label='full name'
+					value={name}
+					onChange={({ target }) => setFullName(target.value)}
+				/>
 			</div>
 
 			<div>
-				<TextField type='password' label='password' name='password' />
+				<TextField
+					type='password'
+					label='password'
+					value={password}
+					onChange={({ target }) => setPassword(target.value)}
+				/>
 			</div>
 
 			<div>

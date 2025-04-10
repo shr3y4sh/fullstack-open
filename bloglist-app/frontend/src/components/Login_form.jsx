@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import React from 'react';
 
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Typography } from '@mui/material';
 
 import { useUserLogin } from '../contexts/user-reducer';
 
@@ -13,21 +13,18 @@ const Login_Form = () => {
 
 	async function handleLogin(e) {
 		e.preventDefault();
-		const nextUsername = e.target.username.value;
-		const nextPassword = e.target.password.value;
-		await user.loginUser({ nextUsername, nextPassword });
-		setUsername('');
-		setPassword('');
+		await user.loginUser({ username, password });
 	}
 	return (
 		<>
-			<h1>Login to post blogs</h1>
+			<Typography variant='h4'>Login to post blogs</Typography>
 			<form onSubmit={handleLogin} className='blog-form'>
 				<div className='form-controls'>
 					<TextField
 						variant='outlined'
 						label='username'
-						name='username'
+						value={username}
+						onChange={({ target }) => setUsername(target.value)}
 					/>
 				</div>
 				<div className='form-controls'>
@@ -35,7 +32,8 @@ const Login_Form = () => {
 						variant='outlined'
 						label='password'
 						type='password'
-						name='password'
+						value={password}
+						onChange={({ target }) => setPassword(target.value)}
 					/>
 				</div>
 				<div>

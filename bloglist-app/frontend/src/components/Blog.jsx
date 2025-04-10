@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetNotifications } from '../contexts/notification-reducer';
 import { incrementLike, deleteBlogFromServer } from '../services/blogs';
+import { Button } from '@mui/material';
 import React from 'react';
 
 const Blog = ({ blog, token }) => {
@@ -56,26 +57,26 @@ const Blog = ({ blog, token }) => {
 		<div className='blog blog-list'>
 			<div className='title'>
 				{blog.title}{' '}
-				<button className='btn' onClick={() => setVisible((v) => !v)}>
+				<Button className='btn' onClick={() => setVisible((v) => !v)}>
 					{buttonLabel()}
-				</button>
+				</Button>
 			</div>
 			{visible && (
 				<>
 					<p className='url'>{blog.url}</p>
 					<p className='likes'>
 						Likes: {blog.likes}
-						<button
+						<Button
 							className='like-btn'
 							onClick={() => handleLike(blog)}>
 							like
-						</button>
+						</Button>
 					</p>
 					<div className='author'>{blog.author}</div>
 					<div>
-						<button onClick={handleBlogDelete} className='btn'>
+						<Button onClick={handleBlogDelete} className='btn'>
 							Delete
-						</button>
+						</Button>
 					</div>
 				</>
 			)}

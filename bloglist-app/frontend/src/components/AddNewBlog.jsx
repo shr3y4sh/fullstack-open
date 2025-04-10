@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addBlogPost } from '../services/blogs';
+import { TextField, Button, Typography } from '@mui/material';
 import React from 'react';
 import { useSetNotifications } from '../contexts/notification-reducer';
 
@@ -35,45 +36,41 @@ const AddNewBlog = ({ token, ref }) => {
 	}
 	return (
 		<div>
-			<h2 className='new-blog-head'>AddNewBlog</h2>
+			<Typography variant='h5' component={'h3'}>
+				AddNewBlog
+			</Typography>
 			<form onSubmit={handleBlogSubmit} className='blog-form'>
 				<div className='form-controls'>
-					<label htmlFor='title'>Title</label>
-					<input
+					<TextField
 						type='text'
-						name='title'
-						id='title'
+						label='Title'
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
 						required
 					/>
 				</div>
 				<div className='form-controls'>
-					<label htmlFor='author'>Author</label>
-					<input
+					<TextField
 						type='text'
-						name='author'
-						id='author'
+						label='Author'
 						value={author}
 						onChange={(e) => setAuthor(e.target.value)}
 						required
 					/>
 				</div>
 				<div className='form-controls'>
-					<label htmlFor='url'>Url</label>
-					<input
+					<TextField
 						type='text'
-						name='url'
-						id='url'
+						label='URL'
 						value={url}
 						onChange={(e) => setUrl(e.target.value)}
 						required
 					/>
 				</div>
 				<div className='button-div'>
-					<button type='submit' className='btn'>
+					<Button type='submit' variant='outlined'>
 						Submit
-					</button>
+					</Button>
 				</div>
 			</form>
 		</div>
