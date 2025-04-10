@@ -28,7 +28,7 @@ const AddNewBlog = ({ token, ref }) => {
 	async function handleBlogSubmit(e) {
 		e.preventDefault();
 		blogMutation.mutate({ title, author, url });
-		setNotification(`A new blog: ${title} by ${author} was added`);
+		setNotification(`A new blog: ${title} by ${author} was added`, false);
 		setTitle('');
 		setAuthor('');
 		setUrl('');

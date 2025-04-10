@@ -1,0 +1,41 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Roboto;
+}
+
+header.navbar {
+	width: 100vw;
+	height: 5rem;
+	background-color: rgb(107, 206, 239);
+	padding-top: 1rem;
+	padding-bottom: 0;
+	margin-bottom: 3rem;
+}
+
+.nav-links,
+.login-user {
+	padding: 1rem;
+	border: none;
+	margin-left: 1rem;
+	text-decoration: none;
+}
+
+.nav-links,
+.btn {
+	color: aliceblue;
+	background-color: rgb(15, 15, 81);
+	border-radius: 0.5rem;
+}
+
+.login-user {
+	display: inline;
+}
+
+.btn {
+	margin-left: 1rem;
+	width: 5rem;
+	height: 3rem;
+	border: none;
+}

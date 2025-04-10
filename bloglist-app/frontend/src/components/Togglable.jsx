@@ -13,9 +13,14 @@ const Togglable = ({ buttonLabel, children, ref }) => {
 
 	useImperativeHandle(ref, () => {
 		return {
+			visible,
 			toggleVisibility
 		};
 	});
+
+	if (!visible) {
+		return null;
+	}
 
 	return (
 		<div style={{ textAlign: 'center' }}>
@@ -24,12 +29,7 @@ const Togglable = ({ buttonLabel, children, ref }) => {
 					{buttonLabel}
 				</Button>
 			</div>
-			<div style={showWhenVisible}>
-				{children}
-				<Button variant='contained' onClick={toggleVisibility}>
-					Cancel
-				</Button>
-			</div>
+			<div style={showWhenVisible}>{children}</div>
 		</div>
 	);
 };

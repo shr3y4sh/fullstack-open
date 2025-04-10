@@ -7,7 +7,7 @@ export const NotificationsDispatch = createContext(null);
 export const notificationReducer = (state, action) => {
 	switch (action.type) {
 		case 'SHOW':
-			return action.payload;
+			return { message: action.payload, error: action.isError };
 
 		case 'DESTROY':
 			return null;
@@ -20,10 +20,11 @@ export const notificationReducer = (state, action) => {
 export const useSetNotifications = () => {
 	const dispatch = useContext(NotificationsDispatch);
 
-	return (message) => {
+	return (message, isError) => {
 		dispatch({
 			type: 'SHOW',
-			payload: message
+			payload: message,
+			isError
 		});
 
 		setTimeout(() => {

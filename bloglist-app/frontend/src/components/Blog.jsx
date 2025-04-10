@@ -1,14 +1,20 @@
-import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetNotifications } from '../contexts/notification-reducer';
 import { incrementLike, deleteBlogFromServer } from '../services/blogs';
-import { Button } from '@mui/material';
+import { Button, Box, Typography, Link } from '@mui/material';
+import { useParams, Link as RouterLink } from 'react-router-dom';
+
 import React from 'react';
 
-const Blog = ({ blog, token }) => {
-	const [visible, setVisible] = useState(false);
-
+export const BlogDetails = ({ blogs, token }) => {
 	const setNotification = useSetNotifications();
+
+	const { id } = useParams();
+
+	const blog = blogs.find((b) => b._id.toString() === id);
+	if (!blog) {
+		return <div>Blog not found</div>;
+	}
 
 	const queryClient = useQueryClient();
 
@@ -17,24 +23,22 @@ const Blog = ({ blog, token }) => {
 
 		onSuccess: (data) =>
 			queryClient.setQueryData(['blogs'], (oldBlogs) =>
-				oldBlogs.map((blog) => (blog.id === data.id ? data : blog))
+				oldBlogs.map((b) =>
+					b._id.toString() === data._id.toString() ? data : b
+				)
 			)
 	});
 
-	const buttonLabel = () => {
-		if (visible) {
-			return 'Hide';
-		} else {
-			return 'View';
-		}
-	};
-
 	const deleteBlogMutation = useMutation({
 		mutationFn: async (data) => await deleteBlogFromServer(data, token),
-		onSuccess: () =>
-			queryClient.setQueryData(['blogs'], (oldBlogs) =>
-				oldBlogs.filter((b) => b.id !== blog.id)
-			)
+		onSuccess: () => {
+			setNotification('Deletion successfull', false);
+			return queryClient.setQueryData(['blogs'], (oldBlogs) =>
+				oldBlogs.filter((b) => b._id.toString() !== blog._id.toString())
+			);
+		},
+		onError: (data) =>
+			setNotification(`Error: ${data.response.data.error}`, true)
 	});
 
 	function handleBlogDelete() {
@@ -44,7 +48,7 @@ const Blog = ({ blog, token }) => {
 		}
 
 		deleteBlogMutation.mutate(blog);
-		setNotification(`${blog.title} was deleted`);
+		setNotification(`${blog.title} was deleted`, false);
 	}
 
 	function handleLike(blog) {
@@ -52,35 +56,41 @@ const Blog = ({ blog, token }) => {
 			...blog
 		});
 	}
-
 	return (
-		<div className='blog blog-list'>
-			<div className='title'>
-				{blog.title}{' '}
-				<Button className='btn' onClick={() => setVisible((v) => !v)}>
-					{buttonLabel()}
+		<>
+			<Typography variant='h4'>{blog.title} </Typography>
+			<Link href={blog.url}>
+				<Typography variant='subtitle2'>{blog.url}</Typography>
+			</Link>
+
+			<Typography variant='subtitle1'>
+				Likes: {blog.likes}
+				<Button onClick={() => handleLike(blog)}>like</Button>
+			</Typography>
+			<Typography variant='h5'>{blog.author}</Typography>
+			<div>
+				<Button onClick={handleBlogDelete} variant='outlined'>
+					Delete
 				</Button>
 			</div>
-			{visible && (
-				<>
-					<p className='url'>{blog.url}</p>
-					<p className='likes'>
-						Likes: {blog.likes}
-						<Button
-							className='like-btn'
-							onClick={() => handleLike(blog)}>
-							like
-						</Button>
-					</p>
-					<div className='author'>{blog.author}</div>
-					<div>
-						<Button onClick={handleBlogDelete} className='btn'>
-							Delete
-						</Button>
-					</div>
-				</>
-			)}
-		</div>
+			<Typography variant='subtitle1'>
+				Added by: {blog.user.username}
+			</Typography>
+		</>
+	);
+};
+
+const Blog = ({ blog }) => {
+	return (
+		<>
+			<Box sx={{ p: 2, border: '2px solid gray' }}>
+				<Link
+					component={RouterLink}
+					to={`/blogs/${blog._id.toString()}`}>
+					<Typography variant='h5'>{blog.title} </Typography>
+				</Link>
+			</Box>
+		</>
 	);
 };
 

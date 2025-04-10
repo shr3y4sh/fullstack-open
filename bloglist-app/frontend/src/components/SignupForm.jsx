@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { TextField, Button, Typography } from '@mui/material';
 
 import { useUserLogin } from '../contexts/user-reducer';
-import { signUp } from '../services/login';
+import { signUp } from '../services/users';
 
 const SignupForm = () => {
 	const [username, setusername] = useState('');

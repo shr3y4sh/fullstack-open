@@ -24,9 +24,7 @@ const blogSchema = new mongoose.Schema({
 });
 
 blogSchema.set('toJSON', {
-	transform: (doc, returned) => {
-		returned.id = returned._id.toString();
-		delete returned._id;
+	transform: (_doc, returned) => {
 		delete returned.__v;
 	}
 });

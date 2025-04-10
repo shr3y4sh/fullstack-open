@@ -7,7 +7,6 @@ const blogRouter = require('./controllers/blogPosts');
 const userRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const middleware = require('./utils/middleware');
-const bulkController = require('./mongo');
 const logger = require('./utils/logger');
 const mongoose = require('mongoose');
 

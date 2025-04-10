@@ -4,23 +4,14 @@ const bcrypt = require('bcryptjs');
 const userRouter = require('express').Router();
 
 userRouter.get('/', async (_req, res) => {
-	const users = await User.find({}).populate('blogs', {
-		title: 1,
-		author: 1,
-		url: 1
-	});
+	const users = await User.find({}).populate('blogs');
 	res.status(200).json(users);
 });
 
-userRouter.get('/:id', async (req, res) => {
-	const { id } = req.params;
+userRouter.get('/:username', async (req, res) => {
+	const { username } = req.params;
 
-	const user = User.findById(id).populate('blogs', {
-		title: 1,
-		author: 1,
-		url: 1
-	});
-
+	const user = await User.findOne({ username }).populate('blogs');
 	if (!user) {
 		return res.status(404).json({ message: 'User not found' });
 	}

@@ -25,7 +25,7 @@ export const addBlogPost = async (input, token) => {
 
 export const incrementLike = async (blog, token) => {
 	const res = await axios.put(
-		`${baseUrl}/${blog.id}`,
+		`${baseUrl}/${blog._id.toString()}`,
 		{ ...blog },
 		{
 			headers: {
@@ -37,7 +37,7 @@ export const incrementLike = async (blog, token) => {
 };
 
 export const deleteBlogFromServer = async (blog, token) => {
-	const res = await axios.delete(`${baseUrl}/${blog.id}`, {
+	const res = await axios.delete(`${baseUrl}/${blog._id.toString()}`, {
 		headers: {
 			Authorization: `Bearer ${token}`
 		}
