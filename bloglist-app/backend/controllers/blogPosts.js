@@ -32,7 +32,8 @@ blogRouter.post('/', middleware.userExtractor, async (req, res) => {
 		author: body.author,
 		url: body.url,
 		likes: body.likes,
-		user: req.user._id
+		user: req.user._id,
+		comments: []
 	});
 
 	const user = await User.findById(req.user._id);
@@ -61,11 +62,9 @@ blogRouter.delete('/:id', middleware.userExtractor, async (req, res) => {
 	}
 
 	if (blog.user.toString() !== userId.toString()) {
-		return res
-			.status(401)
-			.json({
-				error: 'Unauthorized: only the creator of the blog can delete it.'
-			});
+		return res.status(401).json({
+			error: 'Unauthorized: only the creator of the blog can delete it.'
+		});
 	}
 
 	await Blog.findByIdAndDelete(id);

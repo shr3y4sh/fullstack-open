@@ -1,13 +1,16 @@
+import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetNotifications } from '../contexts/notification-reducer';
 import { incrementLike, deleteBlogFromServer } from '../services/blogs';
 import { Button, Box, Typography, Link } from '@mui/material';
 import { useParams, Link as RouterLink } from 'react-router-dom';
-
+import CommentBox, { CommentsList } from './CommentBox';
 import React from 'react';
 
-export const BlogDetails = ({ blogs, token }) => {
+export const BlogDetails = ({ loggedUser, blogs }) => {
 	const setNotification = useSetNotifications();
+	const token = loggedUser.token;
+	const [showDelete, setShowDelete] = useState(false);
 
 	const { id } = useParams();
 
@@ -15,6 +18,12 @@ export const BlogDetails = ({ blogs, token }) => {
 	if (!blog) {
 		return <div>Blog not found</div>;
 	}
+
+	useEffect(() => {
+		if (blog.user.username === loggedUser.username) {
+			setShowDelete(true);
+		}
+	}, []);
 
 	const queryClient = useQueryClient();
 
@@ -62,20 +71,22 @@ export const BlogDetails = ({ blogs, token }) => {
 			<Link href={blog.url}>
 				<Typography variant='subtitle2'>{blog.url}</Typography>
 			</Link>
-
+			<CommentBox username={loggedUser.username} id={id} token={token} />
 			<Typography variant='subtitle1'>
 				Likes: {blog.likes}
 				<Button onClick={() => handleLike(blog)}>like</Button>
 			</Typography>
 			<Typography variant='h5'>{blog.author}</Typography>
-			<div>
+			{showDelete && (
 				<Button onClick={handleBlogDelete} variant='outlined'>
 					Delete
 				</Button>
-			</div>
+			)}
 			<Typography variant='subtitle1'>
 				Added by: {blog.user.username}
 			</Typography>
+
+			<CommentsList id={id} token={token} />
 		</>
 	);
 };

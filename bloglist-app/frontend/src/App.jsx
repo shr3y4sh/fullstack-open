@@ -129,8 +129,8 @@ const App = () => {
 							path='/blogs/:id'
 							element={
 								<BlogDetails
+									loggedUser={user.data}
 									blogs={data}
-									token={user.data.token}
 								/>
 							}
 						/>

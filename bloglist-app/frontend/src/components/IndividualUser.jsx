@@ -1,7 +1,13 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-
-import { Typography, List, ListItem } from '@mui/material';
+import { useParams, Link } from 'react-router-dom';
+import { ChevronRight } from '@mui/icons-material';
+import {
+	Typography,
+	List,
+	ListItem,
+	ListItemIcon,
+	ListItemText
+} from '@mui/material';
 
 const IndividualUser = ({ displayList }) => {
 	const { id } = useParams();
@@ -21,7 +27,14 @@ const IndividualUser = ({ displayList }) => {
 			<Typography variant='h6'>Added Blogs</Typography>
 			<List>
 				{individualUser.blogs.list.map((blog) => (
-					<ListItem key={blog._id}>{blog.title}</ListItem>
+					<ListItem key={blog._id}>
+						<ListItemIcon>
+							<ChevronRight />
+						</ListItemIcon>
+						<Link to={`/blogs/${blog._id}`}>
+							<ListItemText>{blog.title}</ListItemText>
+						</Link>
+					</ListItem>
 				))}
 			</List>
 		</>
