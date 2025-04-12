@@ -1,16 +1,18 @@
 {
-  "name": "graphql",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@apollo/server": "^4.12.0",
-    "graphql": "^16.10.0",
-    "uuid": "^11.1.0"
-  }
+	"name": "graphql",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"library": "node --watch books.js",
+		"phonebook": "node --watch"
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@apollo/server": "^4.12.0",
+		"graphql": "^16.10.0",
+		"uuid": "^11.1.0"
+	}
 }
