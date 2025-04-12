@@ -34,11 +34,12 @@ commentsRouter.post('/:id', middleware.userExtractor, async (req, res) => {
 	if (!blog) {
 		return res.status(400).json({ message: 'Bad request' });
 	}
+	const newComment = { comment, username, addedBy: user._id };
 
-	blog.comments.push({ comment, username, addedBy: user._id });
+	blog.comments.push(newComment);
 
 	await blog.save();
-	res.status(201).json({ message: 'Comment created' });
+	res.status(201).json(newComment);
 });
 
 module.exports = commentsRouter;

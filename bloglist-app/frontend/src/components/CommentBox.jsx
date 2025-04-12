@@ -11,10 +11,10 @@ const CommentBox = ({ username, id, token }) => {
 		mutationFn: async (comment) => {
 			return await postComment(comment, username, id, token);
 		},
-		onSuccess: () => {
-			queryClient.setQueryData(['comments'], (oldComments) => {
-				oldComments.concat(commentObject);
-			});
+		onSuccess: (data) => {
+			queryClient.setQueriesData(['comments'], (oldComments) =>
+				oldComments.concat(data)
+			);
 		}
 	});
 
@@ -36,16 +36,16 @@ const CommentBox = ({ username, id, token }) => {
 };
 
 export const CommentsList = ({ id, token }) => {
-	const { data, isError, error } = useQuery({
+	const { data, isError, error, isPending } = useQuery({
 		queryKey: ['comments'],
 		queryFn: async () => {
-			const { comment, username } = await getComments(id, token);
-			return {
-				comment,
-				username
-			};
+			return await getComments(id, token);
 		}
 	});
+
+	if (isPending) {
+		return <div>comments loading..</div>;
+	}
 
 	if (isError) {
 		return (
@@ -56,21 +56,26 @@ export const CommentsList = ({ id, token }) => {
 		);
 	}
 
-	if (data.length === 0) {
-		return null;
-	}
-
 	return (
-		<ul>
-			{data.map((c) => (
-				<li key={{ comment: c.comment, userId: c.addedBy }}>
-					<div>
-						{c.comment}
-						<span>{c.username}</span>
-					</div>
-				</li>
-			))}
-		</ul>
+		<>
+			<h3>Comments</h3>
+			<ul>
+				{data.map((c) => (
+					<li
+						key={JSON.stringify({
+							comment: c.comment,
+							userId: c.addedBy
+						})}>
+						<div>
+							{c.comment} :{' '}
+							<span>
+								<em>{c.username}</em>
+							</span>
+						</div>
+					</li>
+				))}
+			</ul>
+		</>
 	);
 };
 
