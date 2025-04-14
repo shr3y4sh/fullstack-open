@@ -2,17 +2,19 @@
 	"name": "graphql",
 	"version": "1.0.0",
 	"main": "index.js",
+	"type": "module",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"library": "node --watch books.js",
-		"phonebook": "node --watch"
+		"dev": "node --watch index.js"
 	},
 	"author": "",
 	"license": "ISC",
 	"description": "",
 	"dependencies": {
 		"@apollo/server": "^4.12.0",
+		"dotenv": "^16.5.0",
 		"graphql": "^16.10.0",
-		"uuid": "^11.1.0"
+		"jsonwebtoken": "^9.0.2",
+		"mongoose": "^8.13.2"
 	}
 }
