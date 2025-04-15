@@ -9,19 +9,30 @@ function PersonForm({ setError }) {
 	const [city, setCity] = useState('');
 
 	const [createPerson] = useMutation(CREATE_PERSON, {
-		refetchQueries: [{ query: ALL_PERSONS }],
 		onError: (error) => {
 			const messages = error.graphQLErrors
 				.map((e) => e.message)
 				.join('\n');
 			setError(messages);
+		},
+		update: (cache, res) => {
+			cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => {
+				return {
+					allPersons: allPersons.concat(res.data.addPerson)
+				};
+			});
 		}
 	});
 
 	const submit = (e) => {
 		e.preventDefault();
 		createPerson({
-			variables: { name, phone, street, city }
+			variables: {
+				name,
+				street,
+				city,
+				phone: phone.length > 0 ? phone : undefined
+			}
 		});
 		console.log('Form submission?');
 

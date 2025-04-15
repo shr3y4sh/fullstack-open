@@ -29,7 +29,7 @@ export const CREATE_PERSON = gql`
         $name: String!
         $street: String!
         $city: String!
-        $phone: String!
+        $phone: String
     ) {
         addPerson(
             name: $name
@@ -61,6 +61,17 @@ export const EDIT_PHONE = gql`
                 city
             }
             id
+        }
+    }
+`;
+
+export const LOGIN = gql`
+    mutation login(
+        $username: String!,
+        $password: String!,
+    ) {
+        login(username: $username, password: $password) {
+            value
         }
     }
 `;

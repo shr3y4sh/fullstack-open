@@ -10,7 +10,7 @@ const NewBook = (props) => {
 	const [genre, setGenre] = useState('');
 	const [genres, setGenres] = useState([]);
 
-	const [createBook] = useMutation(ADD_BOOK, {
+	const [createBook, { loading }] = useMutation(ADD_BOOK, {
 		refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
 		onError: (error) => {
 			const messages = error.graphQLErrors
@@ -24,16 +24,24 @@ const NewBook = (props) => {
 		return null;
 	}
 
+	const sanitize = (str) => str.replace(/[<>]/g, '');
+	const isValid = () =>
+		title.trim() && author.trim() && !isNaN(Number(published));
+
 	const submit = async (event) => {
 		event.preventDefault();
 
-		console.log('add book...');
+		if (!isValid()) {
+			props.setError('Please fill all fields correctly.');
+			return;
+		}
+
 		await createBook({
 			variables: {
-				title,
-				author,
+				title: sanitize(title),
+				author: sanitize(author),
 				published: Number(published),
-				genres
+				genres: genres.map(sanitize)
 			}
 		});
 
@@ -45,7 +53,7 @@ const NewBook = (props) => {
 	};
 
 	const addGenre = () => {
-		setGenres(genres.concat(genre));
+		setGenres(genres.concat(genre.split(',')));
 		setGenre('');
 	};
 
@@ -84,7 +92,9 @@ const NewBook = (props) => {
 					</button>
 				</div>
 				<div>genres: {genres.join(' ')}</div>
-				<button type='submit'>create book</button>
+				<button type='submit' disabled={loading}>
+					create book
+				</button>
 			</form>
 		</div>
 	);

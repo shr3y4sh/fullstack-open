@@ -50,6 +50,10 @@ startStandaloneServer(server, {
 
 			return { currentUser };
 		}
+	},
+	cors: {
+		origin: 'http://localhost:5173',
+		credentials: true
 	}
 }).then(({ url }) => {
 	console.log(`Server ready at ${url}`);

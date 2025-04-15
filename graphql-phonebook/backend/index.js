@@ -176,22 +176,28 @@ const resolvers = {
 		},
 
 		login: async (_root, args) => {
-			const user = await User.findOne({ username: args.username });
+			try {
+				const user = await User.findOne({ username: args.username });
 
-			if (!user || args.password !== 'secret') {
-				throw new GraphQLError('Invalid credentials', {
-					extensions: { code: 'BD_USER_INPUT' }
-				});
+				if (!user || args.password !== 'secret') {
+					throw new GraphQLError('Invalid credentials', {
+						extensions: { code: 'BD_USER_INPUT' }
+					});
+				}
+
+				const userForToken = {
+					username: user.username,
+					id: user._id
+				};
+
+				return {
+					value: jwt.sign(userForToken, process.env.JWT_SECRET)
+				};
+			} catch (err) {
+				console.error(err);
+
+				throw new GraphQLError(`${err}`);
 			}
-
-			const userForToken = {
-				username: user.username,
-				id: user._id
-			};
-
-			return {
-				value: jwt.sign(userForToken, process.env.JWT_SECRET)
-			};
 		},
 
 		addAsFriend: async (_root, args, { currentUser }) => {

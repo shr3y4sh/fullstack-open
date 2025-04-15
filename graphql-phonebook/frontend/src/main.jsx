@@ -4,31 +4,26 @@ import App from './App.jsx';
 import {
 	ApolloClient,
 	InMemoryCache,
-	gql,
+	createHttpLink,
 	ApolloProvider
 } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 
-const client = new ApolloClient({
-	uri: 'http://localhost:4000',
-	cache: new InMemoryCache()
+const authLink = setContext((_, { headers }) => {
+	const token = localStorage.getItem('users-token');
+	return {
+		headers: {
+			...headers,
+			authorization: token ? `Bearer ${token}` : null
+		}
+	};
 });
 
-const query = gql`
-  query {
-    allPersons {
-      name
-      phone
-      address {
-        street
-        city
-      }
-      id
-    }
-  }
-`;
+const httpLink = createHttpLink({ uri: 'http://localhost:4000' });
 
-client.query({ query }).then((res) => {
-	console.log(res.data);
+const client = new ApolloClient({
+	link: authLink.concat(httpLink),
+	cache: new InMemoryCache()
 });
 
 createRoot(document.getElementById('root')).render(

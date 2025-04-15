@@ -24,7 +24,7 @@ const typeDefs = `
     }
 
     type Query {
-        bookCount: Int!
+        booksCount: Int!
 
         authorCount: Int!
 

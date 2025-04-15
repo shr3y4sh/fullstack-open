@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { FIND_PERSON } from '../queries/queries';
 
 const Person = ({ person, onClose }) => {
