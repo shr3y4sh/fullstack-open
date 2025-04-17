@@ -1,4 +1,4 @@
-interface AverageExercise {
+export interface AverageExercise {
 	periodLength: number;
 	trainingDays: number;
 	target: number;
@@ -8,7 +8,7 @@ interface AverageExercise {
 	ratingDescription: string;
 }
 
-const calculateExercises = (
+export const exercisecalculator = (
 	target: number,
 	hoursPerDayData: number[]
 ): AverageExercise => {
@@ -50,21 +50,26 @@ const calculateExercises = (
 	};
 };
 
-const validInputs = (inputs: string[]): boolean => {
-	inputs.forEach((element) => {
-		if (isNaN(Number(element))) return false;
-	});
+export const validInputs = (inputs: string[]): boolean => {
+	let result = true;
 
-	return true;
+	result = inputs.every((element) => !isNaN(Number(element)));
+
+	return result;
 };
 
-try {
-	if (!validInputs(process.argv.slice(2))) throw new Error('Invalid inputs');
+if (require.main === module) {
+	try {
+		if (!validInputs(process.argv.slice(2)))
+			throw new Error('Invalid inputs');
 
-	const target = Number(process.argv[2]);
-	const hoursPerDayData = process.argv.slice(3).map((elem) => Number(elem));
+		const target = Number(process.argv[2]);
+		const hoursPerDayData = process.argv
+			.slice(3)
+			.map((elem) => Number(elem));
 
-	console.log(calculateExercises(target, hoursPerDayData));
-} catch (error) {
-	console.log(error);
+		console.log(exercisecalculator(target, hoursPerDayData));
+	} catch (error) {
+		console.log(error);
+	}
 }

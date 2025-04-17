@@ -1,4 +1,5 @@
 const bmiCalculator = (weight: number, height: number): string => {
+	if (isNaN(weight) || isNaN(height)) throw new Error('Invalid arguments');
 	if (height === 0) throw new Error('Height cannot be 0');
 	height = height / 100;
 	const bmi = weight / (height * height);
@@ -22,19 +23,14 @@ const bmiCalculator = (weight: number, height: number): string => {
 	}
 };
 
-try {
-	if (process.argv.length !== 4)
-		throw new Error(
-			'input should be two numbers, height(m) and weight(kg)'
-		);
-	console.log(process.argv[2], process.argv[3]);
+export default bmiCalculator;
 
-	const weight = Number(process.argv[3]);
-	const height = Number(process.argv[2]);
+if (require.main === module) {
+	try {
+		const [height, weight] = process.argv.slice(2, 4);
 
-	if (isNaN(weight) || isNaN(height)) throw new Error('Invalid args');
-
-	console.log(bmiCalculator(weight, height));
-} catch (error) {
-	console.log(error);
+		console.log(bmiCalculator(Number(weight), Number(height)));
+	} catch (error) {
+		console.log(error);
+	}
 }
