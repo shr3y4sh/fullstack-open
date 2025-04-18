@@ -9,10 +9,6 @@ const Books = (props) => {
 
 	const [genreFilter, setGenreFilter] = useState('all');
 
-	if (!props.show) {
-		return null;
-	}
-
 	if (loading) {
 		return <div>Loading...</div>;
 	}
@@ -21,6 +17,9 @@ const Books = (props) => {
 		return <div>{error.message}</div>;
 	}
 
+	if (!props.show) {
+		return null;
+	}
 	let books = data.allBooks.slice();
 
 	const allBooks = books.slice();
@@ -40,21 +39,17 @@ const Books = (props) => {
 	);
 };
 
-/* NEED WORK
-export const RecommendedBooks = ({books, genre, show}) => {
-	books = books.filter(book => book.genre === genre)
-
-	if (!show) {
-		return null;
-	}
-
-	return <>
-		
-		<h2>Recommendations</h2>
-		<p>books inf your favourite genre <strong>{ genre}</strong></p>
-		<BooksTable books={books} /></>
-
-}
-*/
+export const RecommendedBooks = ({ books, genre }) => {
+	books = books.filter((book) => book.genres.includes(genre));
+	return (
+		<>
+			<h2>Recommendations</h2>
+			<p>
+				books in your favourite genre <strong>{genre}</strong>
+			</p>
+			<BooksTable books={books} />
+		</>
+	);
+};
 
 export default Books;

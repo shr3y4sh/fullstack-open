@@ -39,7 +39,7 @@ const Authors = (props) => {
 				</tbody>
 			</table>
 
-			{props.token && (
+			{props.token.current && (
 				<div>
 					<EditBirth authors={authors} setError={props.setError} />
 				</div>

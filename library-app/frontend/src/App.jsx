@@ -24,17 +24,17 @@ const Error = ({ message }) => {
 	);
 };
 
-const ButtonPanel = ({ setPage, token, setToken, setUser }) => {
+const ButtonPanel = ({ setPage, token, setUser }) => {
 	const client = useApolloClient();
 
 	const logout = () => {
-		setToken(null);
+		token.current = null;
 		setUser(null);
 		localStorage.clear();
 		client.clearStore();
 	};
 
-	if (!token) {
+	if (!token.current) {
 		return (
 			<div>
 				<button onClick={() => setPage('authors')}>authors</button>
@@ -47,9 +47,19 @@ const ButtonPanel = ({ setPage, token, setToken, setUser }) => {
 	return (
 		<div>
 			<button onClick={() => setPage('authors')}>authors</button>
-			<button onClick={() => setPage('books')}>books</button>
+			<button
+				onClick={() => {
+					setPage('books');
+				}}>
+				books
+			</button>
 			<button onClick={() => setPage('add')}>add book</button>
-			<button>recommended</button>
+			<button
+				onClick={() => {
+					setPage('books');
+				}}>
+				recommended
+			</button>
 			<button onClick={logout}>logout</button>
 		</div>
 	);
@@ -58,27 +68,20 @@ const ButtonPanel = ({ setPage, token, setToken, setUser }) => {
 const App = () => {
 	const [page, setPage] = useState('authors');
 	const [error, setError] = useState(null);
-	const [token, setToken] = useState(null);
 	const [user, setUser] = useState(null);
-	// fix this
-	const favourite = useRef();
 
+	const token = useRef(null);
 	const userClient = useQuery(ME);
 
 	useEffect(() => {
-		if (!userClient.loading && !userClient.error && token) {
+		if (!userClient.loading && !userClient.error && token.current) {
 			setUser(userClient.data.me);
-
-			// here ******
-			favourite.current = userClient.data.me.favouriteGenre;
 		}
-	}, [userClient]);
+	}, [userClient, token]);
 
-	useEffect(() => {
-		if (!token) {
-			setToken(localStorage.getItem('users-lib-token'));
-		}
-	}, [token]);
+	if (!token.current) {
+		token.current = localStorage.getItem('users-lib-token');
+	}
 
 	function notify(message) {
 		setError(message);
@@ -91,12 +94,7 @@ const App = () => {
 	return (
 		<div>
 			<Error message={error} />
-			<ButtonPanel
-				setPage={setPage}
-				token={token}
-				setUser={setUser}
-				setToken={setToken}
-			/>
+			<ButtonPanel setPage={setPage} token={token} setUser={setUser} />
 			{user && <div>Logged in: {user.username}</div>}
 			<Authors
 				show={page === 'authors'}
@@ -104,13 +102,14 @@ const App = () => {
 				token={token}
 			/>
 
-			<Books show={page === 'books'} />
+			<Books show={page === 'books'} user={user} />
 
 			<LoginForm
 				show={page === 'login'}
 				setError={notify}
-				setToken={setToken}
 				setPage={setPage}
+				token={token}
+				setUser={setUser}
 			/>
 
 			<NewBook show={page === 'add'} setError={notify} />
