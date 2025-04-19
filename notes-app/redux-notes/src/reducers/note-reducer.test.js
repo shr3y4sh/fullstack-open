@@ -1,5 +1,5 @@
 import noteReducer from './note-reducer';
-// import { describe, test, expect } from 'jest';
+import { describe, test, expect } from 'jest';
 import deepFreeze from 'deep-freeze';
 
 describe('note reducer', () => {

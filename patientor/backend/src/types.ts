@@ -19,7 +19,9 @@ export const newPatientEntrySchema = z.object({
 	occupation: z.string()
 });
 
-export interface Patient extends z.infer<typeof newPatientEntrySchema> {
+export type NewPatient = z.infer<typeof newPatientEntrySchema>;
+
+export interface Patient extends NewPatient {
 	id: string;
 }
 
