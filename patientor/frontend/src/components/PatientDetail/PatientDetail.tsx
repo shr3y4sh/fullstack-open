@@ -2,7 +2,8 @@ import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 
 import patientService from '../../services/patients';
-import { Patient } from '../../types';
+import { Entry, Patient } from '../../types';
+import EntryDetail from './EntryDetail/EntryDetail';
 
 function PatientDetail() {
 	const { id } = useParams();
@@ -21,11 +22,25 @@ function PatientDetail() {
 		return null;
 	}
 
+	const entries: Entry[] = patient.entries;
+
 	return (
 		<div>
 			<h2>{patient.name}</h2>
-			<p>ssh: {patient.ssn}</p>
-			<p>occupation {patient.occupation}</p>
+			<div>
+				<p>ssh: {patient.ssn}</p>
+				<p>occupation {patient.occupation}</p>
+			</div>
+			<div>
+				{entries.length > 0 && (
+					<>
+						<h3>Entries</h3>
+						{entries.map((entry) => (
+							<EntryDetail key={entry.id} entry={entry} />
+						))}
+					</>
+				)}
+			</div>
 		</div>
 	);
 }

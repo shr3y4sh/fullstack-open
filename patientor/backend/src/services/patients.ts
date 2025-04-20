@@ -21,7 +21,7 @@ const getSinglePatient = (id: string): Patient => {
 		throw new Error('Invalid Id');
 	}
 
-	return { ...requiredPatient, entries: [] };
+	return requiredPatient;
 };
 
 const createNewPatient = (object: NewPatient): Patient => {
