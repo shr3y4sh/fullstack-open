@@ -1,10 +1,10 @@
 import { v1 as uuid } from 'uuid';
 
-import { PatientsWithoutSSN, Patient, NewPatient } from '../types';
+import { NonSensitivePatients, Patient, NewPatient } from '../types';
 import patientData from '../../data/patients';
 
-const getPatientsNonSensitive = (): PatientsWithoutSSN[] => {
-	const nonSensitiveData: PatientsWithoutSSN[] = patientData.map(
+const getPatientsNonSensitive = (): NonSensitivePatients[] => {
+	const nonSensitiveData: NonSensitivePatients[] = patientData.map(
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		({ ssn, ...others }) => {
 			return {
@@ -15,10 +15,20 @@ const getPatientsNonSensitive = (): PatientsWithoutSSN[] => {
 	return nonSensitiveData;
 };
 
+const getSinglePatient = (id: string): Patient => {
+	const requiredPatient = patientData.find((p) => p.id === id);
+	if (!requiredPatient) {
+		throw new Error('Invalid Id');
+	}
+
+	return { ...requiredPatient, entries: [] };
+};
+
 const createNewPatient = (object: NewPatient): Patient => {
 	const newPatient: Patient = {
 		...object,
-		id: uuid()
+		id: uuid(),
+		entries: []
 	};
 	patientData.push(newPatient);
 	return newPatient;
@@ -26,5 +36,6 @@ const createNewPatient = (object: NewPatient): Patient => {
 
 export default {
 	getPatientsNonSensitive,
-	createNewPatient
+	createNewPatient,
+	getSinglePatient
 };

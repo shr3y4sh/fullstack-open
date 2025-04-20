@@ -1,4 +1,9 @@
-import express from 'express';
+import express, {
+	Request,
+	Response,
+	NextFunction,
+	ErrorRequestHandler
+} from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 
@@ -18,6 +23,17 @@ app.get('/api/ping', (_req, res) => {
 app.use('/api/diagnoses', diagnosisRouter);
 
 app.use('/api/patients', patientRouter);
+
+app.use(
+	(
+		error: ErrorRequestHandler,
+		_req: Request,
+		_res: Response,
+		_next: NextFunction
+	) => {
+		console.log(error);
+	}
+);
 
 app.listen(PORT, () => {
 	console.log(`Server started on port ${PORT}`);

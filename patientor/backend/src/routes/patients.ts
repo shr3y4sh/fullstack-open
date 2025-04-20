@@ -2,7 +2,7 @@ import express, { Response, Request, NextFunction } from 'express';
 import patientService from '../services/patients';
 
 import {
-	PatientsWithoutSSN,
+	NonSensitivePatients,
 	newPatientEntrySchema,
 	NewPatient,
 	Patient
@@ -19,9 +19,27 @@ const patientEntry = (req: Request, _res: Response, next: NextFunction) => {
 	}
 };
 
-router.get('/', (_req, res: Response<PatientsWithoutSSN[]>) => {
+router.get('/', (_req, res: Response<NonSensitivePatients[]>) => {
 	res.status(200).send(patientService.getPatientsNonSensitive());
 });
+
+router.get(
+	'/:id',
+	(req: Request, res: Response<Patient>, next: NextFunction) => {
+		const { id } = req.params;
+
+		try {
+			const patient: Patient = patientService.getSinglePatient(id.trim());
+			res.status(200).send(patient);
+		} catch (error) {
+			if (error instanceof Error) {
+				next(error);
+			} else {
+				console.log(error);
+			}
+		}
+	}
+);
 
 router.post(
 	'/',
