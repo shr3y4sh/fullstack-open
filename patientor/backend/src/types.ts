@@ -54,6 +54,12 @@ export type Entry =
 	| OccupationalHealthcareEntry
 	| HealthCheckEntry;
 
+type UnionOmitType<T, K extends string | number | symbol> = T extends unknown
+	? Omit<T, K>
+	: never;
+
+export type EntryWithoutId = UnionOmitType<Entry, 'id'>;
+
 export const newPatientEntrySchema = z.object({
 	name: z.string(),
 	dateOfBirth: z.string().date(),

@@ -5,7 +5,9 @@ import {
 	NonSensitivePatients,
 	newPatientEntrySchema,
 	NewPatient,
-	Patient
+	Patient,
+	EntryWithoutId,
+	Entry
 } from '../types';
 
 const router = express.Router();
@@ -19,9 +21,22 @@ const patientEntry = (req: Request, _res: Response, next: NextFunction) => {
 	}
 };
 
-router.get('/', (_req, res: Response<NonSensitivePatients[]>) => {
-	res.status(200).send(patientService.getPatientsNonSensitive());
-});
+router.post(
+	'/:id/entries',
+	(req: Request, res: Response<Entry>, next: NextFunction) => {
+		const object = req.body as EntryWithoutId;
+		const { id } = req.params;
+		try {
+			const diagnosisCodes = patientService.parseDiagnosisCodes(object);
+			const entry: Entry = patientService.createNewEntry(object, id);
+			entry.diagnosisCodes = diagnosisCodes;
+			res.status(201).json(entry);
+		} catch (err) {
+			if (err instanceof Error) next(err);
+			else console.log(err);
+		}
+	}
+);
 
 router.get(
 	'/:id',
@@ -40,6 +55,10 @@ router.get(
 		}
 	}
 );
+
+router.get('/', (_req, res: Response<NonSensitivePatients[]>) => {
+	res.status(200).send(patientService.getPatientsNonSensitive());
+});
 
 router.post(
 	'/',

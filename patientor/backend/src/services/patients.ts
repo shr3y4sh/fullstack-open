@@ -1,6 +1,13 @@
 import { v1 as uuid } from 'uuid';
 
-import { NonSensitivePatients, Patient, NewPatient } from '../types';
+import {
+	NonSensitivePatients,
+	Patient,
+	NewPatient,
+	EntryWithoutId,
+	Entry,
+	Diagnosis
+} from '../types';
 import patientData from '../../data/patients';
 
 const getPatientsNonSensitive = (): NonSensitivePatients[] => {
@@ -34,8 +41,34 @@ const createNewPatient = (object: NewPatient): Patient => {
 	return newPatient;
 };
 
+const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
+	if (!object || typeof object !== 'object' || !('diagnosisCodes' in object))
+		return [] as Array<Diagnosis['code']>;
+
+	return object.diagnosisCodes as Array<Diagnosis['code']>;
+};
+
+const createNewEntry = (object: EntryWithoutId, id: string): Entry => {
+	const patient = patientData.find((p) => p.id === id);
+
+	if (!patient) throw new Error('Invalid Id');
+
+	const newEntry: Entry = {
+		...object,
+		id: uuid()
+	};
+
+	patient.entries.push(newEntry);
+
+	patientData.map((p) => (p.id === id ? patient : p));
+
+	return newEntry;
+};
+
 export default {
 	getPatientsNonSensitive,
 	createNewPatient,
-	getSinglePatient
+	getSinglePatient,
+	createNewEntry,
+	parseDiagnosisCodes
 };

@@ -1,0 +1,17 @@
+POST http://localhost:3001/api/patients/2d485e50-20f1-11f0-bee8-9f0b0b9c02b3/entries
+Content-Type: application/json
+
+{
+    "date": "2023-03-10",
+    "specialist": "Dr Byte House",
+    "type": "Hospital",
+    "diagnosisCodes": ["J06.9"],
+    "description": "Admitted for acute upper respiratory infection.",
+    "discharge": {
+        "date": "2023-03-13",
+        "criteria": "No fever, normal breathing."
+    }
+}
+
+###
+GET http://localhost:3001/api/patients/
